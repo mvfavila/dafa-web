@@ -145,8 +145,9 @@ export class AuthEffects {
       map(() => {
         const userData: {
           email: string;
-          token: string;
+          tokenValue: string;
           tokenExpirationDate: string;
+          roles: [];
         } = JSON.parse(localStorage.getItem("userData"));
 
         if (!userData) {
@@ -155,7 +156,7 @@ export class AuthEffects {
 
         const loadedUser = new User(
           userData.email,
-          userData.token,
+          userData.tokenValue,
           new Date(userData.tokenExpirationDate),
           []
         );
