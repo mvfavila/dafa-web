@@ -29,4 +29,11 @@ export const clearError = createAction("[Auth] Clear Error");
 
 export const autoLogin = createAction("[Auth] Auto Login");
 
+export const autoRedirect = createAction(
+  "[Auth] Auto Redirect",
+  props<{
+    redirect: boolean;
+  }>()
+);
+
 export const logout = createAction("[Auth] Logout");
