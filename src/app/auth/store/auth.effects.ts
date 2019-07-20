@@ -11,27 +11,21 @@ import { User } from "../user.model";
 import { AuthService } from "../auth.service";
 
 export interface AuthResponseData {
-  kind: string;
-  idToken: string;
   email: string;
-  refreshToken: string;
+  token: string;
   expiresIn: string;
-  localId: string;
-  registered?: boolean;
 }
 
 const handleAuthentication = (
   expiresIn: number,
   email: string,
-  userId: string,
   token: string
 ) => {
   const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
-  const user = new User(email, userId, token, expirationDate, []);
+  const user = new User(email, token, expirationDate, []);
   localStorage.setItem("userData", JSON.stringify(user));
   return AuthActions.authenticateSuccess({
     email,
-    userId,
     token,
     expirationDate,
     redirect: true
@@ -70,9 +64,8 @@ const handleError = errorRes => {
 
 @Injectable()
 export class AuthEffects {
-  private signupBaseUrl = `${environment.apiUrl} + `;
-  private loginBaseUrl = `${environment.apiUrl} + users/login`;
-  private readonly returnSecureToken = true;
+  private signupBaseUrl = `${environment.apiUrl}`;
+  private loginBaseUrl = `${environment.apiUrl}/users/login`;
 
   authSignup$ = createEffect(() =>
     this.actions$.pipe(
@@ -80,9 +73,10 @@ export class AuthEffects {
       switchMap(signupAction => {
         return this.http
           .post<AuthResponseData>(this.signupBaseUrl, {
-            email: signupAction.email,
-            password: signupAction.password,
-            returnSecureToken: this.returnSecureToken
+            user: {
+              email: signupAction.email,
+              password: signupAction.password
+            }
           })
           .pipe(
             tap(resData => {
@@ -92,8 +86,7 @@ export class AuthEffects {
               return handleAuthentication(
                 +resData.expiresIn,
                 resData.email,
-                resData.localId,
-                resData.idToken
+                resData.token
               );
             }),
             catchError(errorRes => {
@@ -110,9 +103,10 @@ export class AuthEffects {
       switchMap(authData => {
         return this.http
           .post<AuthResponseData>(this.loginBaseUrl, {
-            email: authData.email,
-            password: authData.password,
-            returnSecureToken: this.returnSecureToken
+            user: {
+              email: authData.email,
+              password: authData.password
+            }
           })
           .pipe(
             tap(resData => {
@@ -122,8 +116,7 @@ export class AuthEffects {
               return handleAuthentication(
                 +resData.expiresIn,
                 resData.email,
-                resData.localId,
-                resData.idToken
+                resData.token
               );
             }),
             catchError(errorRes => {
@@ -152,9 +145,8 @@ export class AuthEffects {
       map(() => {
         const userData: {
           email: string;
-          id: string;
-          _token: string;
-          _tokenExpirationDate: string;
+          token: string;
+          tokenExpirationDate: string;
         } = JSON.parse(localStorage.getItem("userData"));
 
         if (!userData) {
@@ -163,23 +155,21 @@ export class AuthEffects {
 
         const loadedUser = new User(
           userData.email,
-          userData.id,
-          userData._token,
-          new Date(userData._tokenExpirationDate),
+          userData.token,
+          new Date(userData.tokenExpirationDate),
           []
         );
 
         if (loadedUser.token) {
           const expirationDuration =
-            new Date(userData._tokenExpirationDate).getTime() -
+            new Date(userData.tokenExpirationDate).getTime() -
             new Date().getTime();
           this.authService.setLogoutTimer(expirationDuration);
 
           return AuthActions.authenticateSuccess({
             email: loadedUser.email,
-            userId: loadedUser.id,
             token: loadedUser.token,
-            expirationDate: new Date(userData._tokenExpirationDate),
+            expirationDate: new Date(userData.tokenExpirationDate),
             redirect: false
           });
         }

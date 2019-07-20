@@ -6,6 +6,10 @@ Front end part of the Dafa solution. Generated with [Angular CLI](https://github
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
+## Debugging
+
+Place the breakpoints, run `ng serve` for a dev server and press F5 to launch the debug environment. Navigate to `http://localhost:4200/`.
+
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
