@@ -11,8 +11,8 @@ import { AuthEffects } from "./auth/store/auth.effects";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { HeaderComponent } from "./header/header.component";
-import * as fromApp from "./store/app.reducer";
 import { SharedModule } from "./shared/shared.module";
+import * as fromApp from "./store/app.reducer";
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],

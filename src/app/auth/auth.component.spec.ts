@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormsModule } from "@angular/forms";
+import { StoreModule } from "@ngrx/store";
 
 import { AuthComponent } from "./auth.component";
+import * as fromApp from "../store/app.reducer";
+import { SharedModule } from "../shared/shared.module";
 
 describe("AuthComponent", () => {
   let component: AuthComponent;
@@ -8,7 +12,12 @@ describe("AuthComponent", () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AuthComponent]
+      declarations: [AuthComponent],
+      imports: [
+        StoreModule.forRoot(fromApp.appReducer),
+        SharedModule,
+        FormsModule
+      ]
     }).compileComponents();
   }));
 
