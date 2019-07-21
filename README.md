@@ -25,3 +25,49 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 ## Running end-to-end tests
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+
+# Preparing for Deployment
+
+Install Firebase CLI, set-up an account and create a new project using the Firebase console.<br/>
+After that, execute the following command in cmd:
+
+> ...\Dafa\dafa-web>firebase init
+
+You're about to initialize a Firebase project in this directory:
+
+> ...\Dafa\dafa-web
+
+Before we get started, keep in mind:
+
+- You are currently outside your home directory
+
+? Are you ready to proceed? Yes
+? Which Firebase CLI features do you want to set up for this folder? Press Space to select features, then Enter to confirm your choices.
+
+> Hosting: Configure and deploy Firebase Hosting sites
+
+=== Project Setup
+
+? Select a default Firebase project for this directory: dafa-web (dafa-web)
+i Using project dafa-web (dafa-web)
+
+=== Hosting Setup
+
+? What do you want to use as your public directory? dist/dafa-web
+? Configure as a single-page app (rewrite all urls to /index.html)? Yes
+? File dist/dafa-web/index.html already exists. Overwrite? No
+
+- Firebase initialization complete!
+
+# Deploying
+
+In cmd:
+
+Dafa\dafa-web>firebase deploy
+
+=== Deploying to 'dafa-web'...
+
+- Deploy complete!
+
+Project Console: https://console.firebase.google.com/project/...
+Hosting URL: https://<project-name>.firebaseapp.com
