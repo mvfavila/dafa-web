@@ -6,6 +6,7 @@ import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
 
 import * as fromApp from "../store/app.reducer";
 import * as AuthActions from "../auth/store/auth.actions";
+import * as ClientActions from "../clients/store/client.actions";
 
 @Component({
   selector: "app-header",
@@ -40,7 +41,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onFetchData() {
-    // this.store.dispatch(ModelActions.fetchModels());
+    this.store.dispatch(ClientActions.fetchClients());
   }
 
   onLogout() {

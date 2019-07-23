@@ -7,6 +7,11 @@ const appChildRoutes: Routes = [
   {
     path: "auth",
     loadChildren: () => import("./auth/auth.module").then(m => m.AuthModule)
+  },
+  {
+    path: "clients",
+    loadChildren: () =>
+      import("./clients/clients.module").then(m => m.ClientsModule)
   }
 ];
 

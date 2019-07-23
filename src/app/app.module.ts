@@ -12,6 +12,7 @@ import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { HeaderComponent } from "./header/header.component";
 import { SharedModule } from "./shared/shared.module";
+import { ClientEffects } from "./clients/store/client.effects";
 import * as fromApp from "./store/app.reducer";
 
 @NgModule({
@@ -22,7 +23,7 @@ import * as fromApp from "./store/app.reducer";
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, ClientEffects]),
     StoreRouterConnectingModule.forRoot(),
     SharedModule
   ],

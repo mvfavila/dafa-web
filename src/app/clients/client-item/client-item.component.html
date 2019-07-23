@@ -1,0 +1,19 @@
+<a
+  [routerLink]="[index]"
+  style="cursor: pointer"
+  class="list-group-item clearfix"
+  routerLinkActive="active"
+>
+  <div class="pull-left">
+    <h4 class="list-group-item-heading">{{ client.company }}</h4>
+    <p class="list-group-item-text">{{ client.email }}</p>
+  </div>
+  <!-- <span class="pull-right">
+    <img
+      [src]="client.imagePath"
+      alt="{{ client.company }}"
+      class="img-responsive"
+      style="max-height: 50px;"
+    />
+  </span> -->
+</a>
