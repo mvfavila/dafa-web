@@ -6,9 +6,10 @@ import { ClientsRoutingModule } from "./clients-routing.module";
 import { ClientsComponent } from "./clients.component";
 import { ClientListComponent } from "./client-list/client-list.component";
 import { ClientItemComponent } from "./client-item/client-item.component";
-import { SharedModule } from "../shared/shared.module";
 import { ClientStartComponent } from "./client-start/client-start.component";
 import { ClientDetailComponent } from "./client-detail/client-detail.component";
+import { ClientEditComponent } from "./client-edit/client-edit.component";
+import { SharedModule } from "../shared/shared.module";
 
 @NgModule({
   declarations: [
@@ -17,9 +18,8 @@ import { ClientDetailComponent } from "./client-detail/client-detail.component";
     ClientsComponent,
     ClientItemComponent,
     ClientStartComponent,
-    ClientDetailComponent
-    // ClientDetailComponent,
-    // ClientEditComponent
+    ClientDetailComponent,
+    ClientEditComponent
   ],
   imports: [
     RouterModule,
