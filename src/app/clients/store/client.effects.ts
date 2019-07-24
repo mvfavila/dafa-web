@@ -16,15 +16,17 @@ export class ClientEffects {
     this.actions$.pipe(
       ofType(ClientActions.fetchClients),
       switchMap(() => {
-        return this.http.get<Client[]>(clientsUrl.GET_ALL);
+        return this.http.get<{ clients: Client[] }>(clientsUrl.GET_ALL);
       }),
-      map(clients => {
-        return clients.map(client => {
+      map(res => {
+        const clients = res.clients;
+        const result = clients.map(client => {
           return {
             ...client,
             fields: client.fields ? client.fields : []
           };
         });
+        return result;
       }),
       map(clients => ClientActions.setClients({ clients }))
     )
