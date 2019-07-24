@@ -8,7 +8,7 @@ import { ClientListComponent } from "./client-list/client-list.component";
 import { ClientItemComponent } from "./client-item/client-item.component";
 import { SharedModule } from "../shared/shared.module";
 import { ClientStartComponent } from "./client-start/client-start.component";
-import { ClientDetailComponent } from './client-detail/client-detail.component';
+import { ClientDetailComponent } from "./client-detail/client-detail.component";
 
 @NgModule({
   declarations: [
