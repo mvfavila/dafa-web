@@ -6,7 +6,7 @@ import { AuthGuard } from "../auth/auth.guard";
 import { ClientStartComponent } from "./client-start/client-start.component";
 import { ClientsResolverService } from "./clients-resolver.service";
 // import { ClientEditComponent } from "./client-edit/client-edit.component";
-// import { ClientDetailComponent } from "./client-detail/client-detail.component";
+import { ClientDetailComponent } from "./client-detail/client-detail.component";
 
 const routes: Routes = [
   {
@@ -19,13 +19,13 @@ const routes: Routes = [
         pathMatch: "full",
         component: ClientStartComponent,
         resolve: [ClientsResolverService]
-      }
+      },
       // { path: "new", component: ClientEditComponent },
-      // {
-      //   path: ":id",
-      //   component: ClientDetailComponent,
-      //   resolve: [ClientsResolverService]
-      // },
+      {
+        path: ":id",
+        component: ClientDetailComponent,
+        resolve: [ClientsResolverService]
+      }
       // {
       //   path: ":id/edit",
       //   component: ClientEditComponent,
