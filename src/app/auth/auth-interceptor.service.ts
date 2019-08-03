@@ -35,7 +35,6 @@ export class AuthInterceptorService implements HttpInterceptor {
             .set("authorization", `Token ${user.token}`)
             .set("Accept", "application/json")
             .set("Content-Type", "application/json")
-            .set("Access-Control-Allow-Credentials", "true")
         });
         return next.handle(modifiedReq);
       })
