@@ -58,16 +58,8 @@ export class ClientEditComponent implements OnInit, OnDestroy {
     this.router.navigate(["../"], { relativeTo: this.route });
   }
 
-  onAddField() {
-    this.getFields().push(
-      new FormGroup({
-        name: new FormControl(null, Validators.required),
-        city: new FormControl(null, [
-          Validators.required
-          // Validators.pattern(/^[1-9]+[0-9]*$/)
-        ])
-      })
-    );
+  onManageClient() {
+    // this.router.navigate(["../", "fields"], { relativeTo: this.route });
   }
 
   onCancel() {
