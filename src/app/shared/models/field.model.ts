@@ -1,3 +1,5 @@
+import { Event } from "./event.model";
+
 export class Field {
   constructor(
     public _id: string,
@@ -8,9 +10,10 @@ export class Field {
     public city: string,
     public state: string,
     public postalCode: string,
+    public events: Event[],
+    public client: string,
     public createdAt: Date,
     public updatedAt: Date,
-    public active: boolean,
-    public client: string
+    public active: boolean
   ) {}
 }

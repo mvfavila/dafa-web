@@ -12,6 +12,11 @@ const appChildRoutes: Routes = [
     path: "clients",
     loadChildren: () =>
       import("./clients/clients.module").then(m => m.ClientsModule)
+  },
+  {
+    path: "fields",
+    loadChildren: () =>
+      import("./fields/fields.module").then(m => m.FieldsModule)
   }
 ];
 

@@ -1,0 +1,97 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form [formGroup]="fieldForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-xs-12">
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="!fieldForm.valid"
+          >
+            Save
+          </button>
+          <button type="button" class="btn btn-danger" (click)="onCancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="firstName">Name</label
+            ><input
+              type="text"
+              id="firstName"
+              formControlName="firstName"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="company">Company</label
+            ><input
+              type="text"
+              id="company"
+              formControlName="company"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="email">E-mail</label
+            ><input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-12" formArrayName="fields">
+          <div
+            class="row"
+            *ngFor="let fieldControl of fieldsControls; let i = index"
+            style="margin-top: 5px"
+            [formGroupName]="i"
+          >
+            <div class="col-xs-8">
+              <input type="text" formControlName="name" class="form-control" />
+            </div>
+            <div class="col-xs-2">
+              <input type="text" formControlName="city" class="form-control" />
+            </div>
+            <div class="col-xs-2">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="onDeleteField(i)"
+              >
+                X
+              </button>
+            </div>
+          </div>
+          <hr />
+          <div class="row">
+            <div class="col-xs-12">
+              <button
+                class="btn btn-success"
+                type="button"
+                (click)="onManageField()"
+              >
+                Manage Field
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

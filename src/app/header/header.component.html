@@ -22,7 +22,7 @@
         <li routerLinkDirective="active" *ngIf="!isAuthenticated">
           <a routerLink="/auth">Authenticate</a>
         </li>
-        <li routerLinkDirective="active">
+        <li routerLinkDirective="active" *ngIf="isAuthenticated">
           <a routerLink="/clients">Clientes</a>
         </li>
       </ul>

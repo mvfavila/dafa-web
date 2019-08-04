@@ -11,8 +11,9 @@ import { AuthEffects } from "./auth/store/auth.effects";
 import { AppComponent } from "./app.component";
 import { AppRoutingModule } from "./app-routing.module";
 import { HeaderComponent } from "./header/header.component";
-import { SharedModule } from "./shared/shared.module";
 import { ClientEffects } from "./clients/store/client.effects";
+import { FieldEffects } from "./fields/store/field.effects";
+import { SharedModule } from "./shared/shared.module";
 import * as fromApp from "./store/app.reducer";
 
 @NgModule({
@@ -23,7 +24,7 @@ import * as fromApp from "./store/app.reducer";
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects, ClientEffects]),
+    EffectsModule.forRoot([AuthEffects, ClientEffects, FieldEffects]),
     StoreRouterConnectingModule.forRoot(),
     SharedModule
   ],

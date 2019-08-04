@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>{{ field.name }}</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div appDropdown class="btn-group">
+      <button class="btn btn-primary dropdown-toggle">
+        Manage Field <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a routerLink="edit" style="cursor: pointer">Edit Field</a>
+        </li>
+        <li>
+          <a style="cursor: pointer" (click)="onDelete()">Delete Field</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    {{ field.name }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let field of field.fields">
+        {{ field.name }} ({{ field.description }})
+      </li>
+    </ul>
+  </div>
+</div>
