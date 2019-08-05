@@ -72,6 +72,7 @@
       </div>
       <div class="row">
         <div class="col-xs-12" formArrayName="events">
+          <label for="client" *ngIf="eventsControls.length > 0">Events</label>
           <div
             class="row"
             *ngFor="let eventControl of eventsControls; let i = index"
@@ -81,14 +82,14 @@
             <div class="col-xs-8">
               <input
                 type="text"
-                formControlName="eventType"
+                formControlName="eventTypeName"
                 class="form-control"
               />
             </div>
-            <div class="col-xs-2">
+            <div class="col-xs-3">
               <input type="date" formControlName="date" class="form-control" />
             </div>
-            <div class="col-xs-2">
+            <div class="col-xs-1">
               <button
                 type="button"
                 class="btn btn-danger"
@@ -104,9 +105,9 @@
               <button
                 class="btn btn-success"
                 type="button"
-                (click)="onManageField()"
+                (click)="onAddEvent()"
               >
-                Manage Field
+                Add Event
               </button>
             </div>
           </div>
