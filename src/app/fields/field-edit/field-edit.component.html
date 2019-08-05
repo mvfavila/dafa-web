@@ -18,11 +18,11 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
-            <label for="firstName">Name</label
+            <label for="name">Name</label
             ><input
               type="text"
-              id="firstName"
-              formControlName="firstName"
+              id="name"
+              formControlName="name"
               class="form-control"
             />
           </div>
@@ -31,11 +31,11 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
-            <label for="company">Company</label
+            <label for="description">Description</label
             ><input
               type="text"
-              id="company"
-              formControlName="company"
+              id="description"
+              formControlName="description"
               class="form-control"
             />
           </div>
@@ -55,24 +55,28 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-12" formArrayName="fields">
+        <div class="col-xs-12" formArrayName="events">
           <div
             class="row"
-            *ngFor="let fieldControl of fieldsControls; let i = index"
+            *ngFor="let eventControl of eventsControls; let i = index"
             style="margin-top: 5px"
             [formGroupName]="i"
           >
             <div class="col-xs-8">
-              <input type="text" formControlName="name" class="form-control" />
+              <input
+                type="text"
+                formControlName="eventType"
+                class="form-control"
+              />
             </div>
             <div class="col-xs-2">
-              <input type="text" formControlName="city" class="form-control" />
+              <input type="date" formControlName="date" class="form-control" />
             </div>
             <div class="col-xs-2">
               <button
                 type="button"
                 class="btn btn-danger"
-                (click)="onDeleteField(i)"
+                (click)="onDeleteEvent(i)"
               >
                 X
               </button>

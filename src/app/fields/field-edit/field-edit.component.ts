@@ -22,12 +22,12 @@ export class FieldEditComponent implements OnInit, OnDestroy {
 
   private storeSub: Subscription;
 
-  get fieldsControls() {
-    return this.getFields().controls;
+  get eventsControls() {
+    return this.getEvents().controls;
   }
 
-  getFields() {
-    return this.fieldForm.get("fields") as FormArray;
+  getEvents() {
+    return this.fieldForm.get("events") as FormArray;
   }
 
   constructor(
@@ -66,8 +66,8 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     this.router.navigate(["../"], { relativeTo: this.route });
   }
 
-  onDeleteField(index: number) {
-    this.getFields().removeAt(index);
+  onDeleteEvent(index: number) {
+    this.getEvents().removeAt(index);
   }
 
   ngOnDestroy() {
