@@ -55,6 +55,22 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="client">Client</label>
+            <select class="form-control" formControlName="client">
+              <option selected value="-1">Please select client</option>
+              <option
+                *ngFor="let client of clients; let i = index"
+                value="{{ i }}"
+                >{{ client.firstName | slice: 0:10 }} -
+                {{ client.company | slice: 0:20 }}</option
+              >
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="row">
         <div class="col-xs-12" formArrayName="events">
           <div
             class="row"

@@ -20,7 +20,11 @@ const routes: Routes = [
         component: FieldStartComponent,
         resolve: [FieldsResolverService]
       },
-      { path: "new", component: FieldEditComponent },
+      {
+        path: "new",
+        component: FieldEditComponent,
+        resolve: [FieldsResolverService]
+      },
       {
         path: ":id",
         component: FieldDetailComponent,

@@ -3,11 +3,13 @@ import { ActivatedRoute, Params, Router } from "@angular/router";
 import { FormGroup, FormControl, FormArray, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
 import { Subscription } from "rxjs";
-import { map } from "rxjs/operators";
+import { map, tap } from "rxjs/operators";
 
 import { Event } from "../../shared/models/event.model";
 import * as fromApp from "src/app/store/app.reducer";
 import * as FieldActions from "../store/field.actions";
+import * as ClientActions from "../../clients/store/client.actions";
+import { Client } from "src/app/shared/models/client.model";
 
 @Component({
   selector: "app-field-edit",
@@ -19,8 +21,10 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   id: number;
   isEditMode = false;
   fieldForm: FormGroup;
+  clients: Client[] = [];
 
-  private storeSub: Subscription;
+  private fieldStoreSub: Subscription;
+  private clientStoreSub: Subscription;
 
   get eventsControls() {
     return this.getEvents().controls;
@@ -45,17 +49,19 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    if (this.isEditMode) {
-      this.store.dispatch(
-        FieldActions.updateField({
-          index: this.id,
-          field: this.fieldForm.value
-        })
-      );
-    } else {
-      this.store.dispatch(FieldActions.addField(this.fieldForm.value));
-    }
-    this.router.navigate(["../"], { relativeTo: this.route });
+    console.log(`Form value: ${JSON.stringify(this.fieldForm.value, null, 2)}`);
+
+    // if (this.isEditMode) {
+    //   this.store.dispatch(
+    //     FieldActions.updateField({
+    //       index: this.id,
+    //       field: this.fieldForm.value
+    //     })
+    //   );
+    // } else {
+    //   this.store.dispatch(FieldActions.addField(this.fieldForm.value));
+    // }
+    // this.router.navigate(["../"], { relativeTo: this.route });
   }
 
   onManageField() {
@@ -74,8 +80,11 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     if (this.idSubscription) {
       this.idSubscription.unsubscribe();
     }
-    if (this.storeSub) {
-      this.storeSub.unsubscribe();
+    if (this.fieldStoreSub) {
+      this.fieldStoreSub.unsubscribe();
+    }
+    if (this.clientStoreSub) {
+      this.clientStoreSub.unsubscribe();
     }
   }
 
@@ -99,10 +108,28 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     let name = "";
     let description = "";
     let email = "";
-    let events = [];
+    let events: Event[] = [];
+    let client = -1;
+
+    this.store.dispatch(ClientActions.fetchClients());
+    this.clientStoreSub = this.store
+      .select("client")
+      .pipe(
+        map(clientState => {
+          return clientState.clients.filter(c => {
+            return c.active;
+          });
+        }),
+        tap(results => {
+          results.sort();
+        })
+      )
+      .subscribe(activeClients => {
+        this.clients = activeClients;
+      });
 
     if (this.isEditMode) {
-      this.storeSub = this.store
+      this.fieldStoreSub = this.store
         .select("field")
         .pipe(
           map(fieldState => {
@@ -116,6 +143,9 @@ export class FieldEditComponent implements OnInit, OnDestroy {
           description = editedField.description;
           email = editedField.email;
           events = editedField.events;
+          client = this.clients
+            .map(c => c._id.toString())
+            .indexOf(editedField.client.toString());
         });
     }
 
@@ -123,7 +153,8 @@ export class FieldEditComponent implements OnInit, OnDestroy {
       name: new FormControl(name, Validators.required),
       description: new FormControl(description, Validators.required),
       email: new FormControl(email, Validators.required),
-      events: new FormArray(this.createEventsControls(events))
+      events: new FormArray(this.createEventsControls(events)),
+      client: new FormControl(client, Validators.required)
     });
   }
 }

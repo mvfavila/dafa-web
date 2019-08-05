@@ -20,7 +20,11 @@ const routes: Routes = [
         component: ClientStartComponent,
         resolve: [ClientsResolverService]
       },
-      { path: "new", component: ClientEditComponent },
+      {
+        path: "new",
+        component: ClientEditComponent,
+        resolve: [ClientsResolverService]
+      },
       {
         path: ":id",
         component: ClientDetailComponent,
