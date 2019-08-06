@@ -6,10 +6,12 @@ import { Subscription } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 import { Event } from "../../shared/models/event.model";
+import { Client } from "src/app/shared/models/client.model";
+import { EventType } from "src/app/shared/models/eventType.model";
 import * as fromApp from "src/app/store/app.reducer";
 import * as FieldActions from "../store/field.actions";
 import * as ClientActions from "../../clients/store/client.actions";
-import { Client } from "src/app/shared/models/client.model";
+import * as EventTypeActions from "../../event-types/store/event-type.actions";
 
 @Component({
   selector: "app-field-edit",
@@ -23,10 +25,11 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   fieldForm: FormGroup;
   clients: Client[] = [];
   events: Event[] = [];
+  eventTypes: EventType[] = [];
 
   private fieldStoreSub: Subscription;
   private clientStoreSub: Subscription;
-  private eventStoreSub: Subscription;
+  private eventTypeStoreSub: Subscription;
 
   get eventsControls() {
     return this.getEvents().controls;
@@ -67,10 +70,13 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   }
 
   onAddEvent() {
+    if (this.eventTypes && this.eventTypes.length === 0) {
+      this.loadEventTypes();
+    }
     this.getEvents().push(
       new FormGroup({
-        eventType: new FormControl(null, Validators.required),
-        date: new FormControl(null, [
+        eventType: new FormControl(-1, Validators.required),
+        date: new FormControl(Date.now(), [
           Validators.required
           // Validators.pattern(/^[1-9]+[0-9]*$/)
         ])
@@ -96,8 +102,8 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     if (this.clientStoreSub) {
       this.clientStoreSub.unsubscribe();
     }
-    if (this.eventStoreSub) {
-      this.eventStoreSub.unsubscribe();
+    if (this.eventTypeStoreSub) {
+      this.eventTypeStoreSub.unsubscribe();
     }
   }
 
@@ -106,6 +112,10 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     events.forEach(event => {
       eventsControls.push(
         new FormGroup({
+          eventTypeName: new FormControl(
+            event.eventType ? event.eventType.name : null,
+            Validators.required
+          ),
           date: new FormControl(event.date, Validators.required),
           active: new FormControl(event.active, [
             Validators.required
@@ -124,7 +134,6 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     let clientEvents: Event[] = [];
     let client = -1;
 
-    this.store.dispatch(ClientActions.fetchClients());
     this.loadClients();
 
     if (this.isEditMode) {
@@ -148,7 +157,7 @@ export class FieldEditComponent implements OnInit, OnDestroy {
         });
 
       if (clientEvents.length > 0) {
-        this.loadEvents();
+        this.loadEventTypes();
       }
     }
 
@@ -162,6 +171,7 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   }
 
   private loadClients() {
+    this.store.dispatch(ClientActions.fetchClients());
     this.clientStoreSub = this.store
       .select("client")
       .pipe(
@@ -179,12 +189,13 @@ export class FieldEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  private loadEvents() {
-    this.eventStoreSub = this.store
-      .select("event")
+  private loadEventTypes() {
+    this.store.dispatch(EventTypeActions.fetchEventTypes());
+    this.eventTypeStoreSub = this.store
+      .select("eventType")
       .pipe(
-        map(eventState => {
-          return eventState.events.filter(c => {
+        map(eventTypeState => {
+          return eventTypeState.eventTypes.filter(c => {
             return c.active;
           });
         }),
@@ -192,8 +203,8 @@ export class FieldEditComponent implements OnInit, OnDestroy {
           results.sort();
         })
       )
-      .subscribe(activeEvents => {
-        this.events = activeEvents;
+      .subscribe(activeEventTypes => {
+        this.eventTypes = activeEventTypes;
       });
   }
 }

@@ -13,6 +13,8 @@ import { AppRoutingModule } from "./app-routing.module";
 import { HeaderComponent } from "./header/header.component";
 import { ClientEffects } from "./clients/store/client.effects";
 import { FieldEffects } from "./fields/store/field.effects";
+import { EventEffects } from "./events/store/event.effects";
+import { EventTypeEffects } from "./event-types/store/event-type.effects";
 import { SharedModule } from "./shared/shared.module";
 import * as fromApp from "./store/app.reducer";
 
@@ -24,7 +26,13 @@ import * as fromApp from "./store/app.reducer";
     HttpClientModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects, ClientEffects, FieldEffects]),
+    EffectsModule.forRoot([
+      AuthEffects,
+      ClientEffects,
+      FieldEffects,
+      EventEffects,
+      EventTypeEffects
+    ]),
     StoreRouterConnectingModule.forRoot(),
     SharedModule
   ],
