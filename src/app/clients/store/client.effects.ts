@@ -3,7 +3,8 @@ import { Injectable } from "@angular/core";
 import { Actions, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { createEffect } from "@ngrx/effects";
-import { switchMap, map, withLatestFrom } from "rxjs/operators";
+import { switchMap, map, withLatestFrom, catchError } from "rxjs/operators";
+import { of } from "rxjs";
 
 import * as fromApp from "../../store/app.reducer";
 import * as ClientActions from "./client.actions";
@@ -32,15 +33,69 @@ export class ClientEffects {
     )
   );
 
+  createClient$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(ClientActions.addClient),
+        switchMap(action => {
+          return this.http
+            .post(clientsUrl.POST, { client: action.client })
+            .pipe(
+              map(_ => ClientActions.addClient({ client: action.client })),
+              catchError((err: Error) =>
+                of(
+                  ClientActions.addClientFailure({
+                    client: action.client,
+                    errorMessage: `Client creation failed`,
+                    originalError: err
+                  })
+                )
+              )
+            );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  updateClient$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(ClientActions.updateClient),
+        switchMap(action => {
+          return this.http.put(clientsUrl.PUT, { client: action.client }).pipe(
+            map(_ =>
+              ClientActions.updateClient({
+                index: action.index,
+                client: action.client
+              })
+            ),
+            catchError((err: Error) =>
+              of(
+                ClientActions.updateClientFailure({
+                  client: action.client,
+                  errorMessage: `Client update failed`,
+                  originalError: err
+                })
+              )
+            )
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
   storeClients$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         ofType(ClientActions.storeClients),
         withLatestFrom(this.store.select("client")),
         switchMap(([_, clientsState]) => {
           return this.http.put(clientsUrl.POST, clientsState.clients);
         })
-      ),
+      );
+    },
     { dispatch: false }
   );
 

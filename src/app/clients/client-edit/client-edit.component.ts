@@ -8,6 +8,7 @@ import { map } from "rxjs/operators";
 import { Field } from "../../shared/models/field.model";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../store/client.actions";
+import { Client } from "src/app/shared/models/client.model";
 
 @Component({
   selector: "app-client-edit",
@@ -16,7 +17,8 @@ import * as ClientActions from "../store/client.actions";
 })
 export class ClientEditComponent implements OnInit, OnDestroy {
   idSubscription: Subscription;
-  id: number;
+  index: number;
+  client: Client;
   isEditMode = false;
   clientForm: FormGroup;
 
@@ -38,7 +40,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.idSubscription = this.route.params.subscribe((params: Params) => {
-      this.id = +params.id;
+      this.index = +params.id;
       this.isEditMode = params.id != null;
       this.initForm();
     });
@@ -48,14 +50,25 @@ export class ClientEditComponent implements OnInit, OnDestroy {
     if (this.isEditMode) {
       this.store.dispatch(
         ClientActions.updateClient({
-          index: this.id,
-          client: this.clientForm.value
+          index: this.index,
+          client: this.fillClientObject()
         })
       );
     } else {
       this.store.dispatch(ClientActions.addClient(this.clientForm.value));
     }
     this.router.navigate(["../"], { relativeTo: this.route });
+  }
+
+  private fillClientObject(): Client {
+    const newClient: Client = { ...this.client };
+    const clientForm = this.clientForm.value;
+
+    newClient.firstName = clientForm.firstName;
+    newClient.company = clientForm.company;
+    newClient.email = clientForm.email;
+
+    return newClient;
   }
 
   onManageClient() {
@@ -96,34 +109,26 @@ export class ClientEditComponent implements OnInit, OnDestroy {
   }
 
   private initForm() {
-    let clientFirstName = "";
-    let company = "";
-    let email = "";
-    let fields = [];
-
     if (this.isEditMode) {
       this.storeSub = this.store
         .select("client")
         .pipe(
           map(clientState => {
             return clientState.clients.find((_, index) => {
-              return index === this.id;
+              return index === this.index;
             });
           })
         )
-        .subscribe(editedClient => {
-          clientFirstName = editedClient.firstName;
-          company = editedClient.company;
-          email = editedClient.email;
-          fields = editedClient.fields;
+        .subscribe(existingClient => {
+          this.client = existingClient;
         });
     }
 
     this.clientForm = new FormGroup({
-      firstName: new FormControl(clientFirstName, Validators.required),
-      company: new FormControl(company, Validators.required),
-      email: new FormControl(email, Validators.required),
-      fields: new FormArray(this.createFieldsControls(fields))
+      firstName: new FormControl(this.client.firstName, Validators.required),
+      company: new FormControl(this.client.company, Validators.required),
+      email: new FormControl(this.client.email, Validators.required),
+      fields: new FormArray(this.createFieldsControls(this.client.fields))
     });
   }
 }
