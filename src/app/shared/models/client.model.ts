@@ -16,4 +16,35 @@ export class Client {
     public updatedAt: Date,
     public active: boolean
   ) {}
+
+  public static new(): Client {
+    const id = "";
+    const firstName = "";
+    const lastName = "";
+    const company = "";
+    const address = "";
+    const city = "";
+    const state = "";
+    const postalCode = "";
+    const email = "";
+    const fields = [];
+    const createdAt = new Date();
+    const updatedAt = createdAt;
+    const active = true;
+    return new Client(
+      id,
+      firstName,
+      lastName,
+      company,
+      address,
+      city,
+      state,
+      postalCode,
+      email,
+      fields,
+      createdAt,
+      updatedAt,
+      active
+    );
+  }
 }
