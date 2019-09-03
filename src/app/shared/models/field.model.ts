@@ -16,4 +16,35 @@ export class Field {
     public updatedAt: Date,
     public active: boolean
   ) {}
+
+  public static new(): Field {
+    const id = "";
+    const name = "";
+    const description = "";
+    const email = "";
+    const address = "";
+    const city = "";
+    const state = "";
+    const postalCode = "";
+    const events = [];
+    const client = "";
+    const createdAt = new Date();
+    const updatedAt = createdAt;
+    const active = true;
+    return new Field(
+      id,
+      name,
+      description,
+      email,
+      address,
+      city,
+      state,
+      postalCode,
+      events,
+      client,
+      createdAt,
+      updatedAt,
+      active
+    );
+  }
 }

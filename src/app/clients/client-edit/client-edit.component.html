@@ -100,13 +100,15 @@
         <!-- state -->
         <div class="col-xs-4">
           <div class="form-group">
-            <label for="state">State</label
-            ><input
-              type="text"
-              id="state"
-              formControlName="state"
-              class="form-control"
-            />
+            <label for="state">State</label>
+            <select class="form-control" formControlName="state">
+              <option selected value="-1">Please select a state</option>
+              <option
+                *ngFor="let state of states; let i = index"
+                value="{{ i }}"
+                >{{ state.name | slice: 0:20 }}</option
+              >
+            </select>
           </div>
         </div>
         <!-- city -->

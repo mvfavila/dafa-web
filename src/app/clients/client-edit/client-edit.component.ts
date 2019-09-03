@@ -6,10 +6,13 @@ import { Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 
 import { Field } from "../../shared/models/field.model";
-import { Client } from "src/app/shared/models/client.model";
+import { Client } from "../../shared/models/client.model";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../store/client.actions";
 import { regexMask } from "../../shared/regex";
+import { states } from "../../shared/states";
+
+const STATE_INITIAL_INDEX = -1;
 
 @Component({
   selector: "app-client-edit",
@@ -22,6 +25,8 @@ export class ClientEditComponent implements OnInit, OnDestroy {
   client: Client;
   isEditMode = false;
   clientForm: FormGroup;
+  states = states;
+  stateIndex: number;
 
   private storeSub: Subscription;
 
@@ -120,21 +125,20 @@ export class ClientEditComponent implements OnInit, OnDestroy {
   }
 
   private initForm() {
+    this.setFormDefaultValues();
+
     if (this.isEditMode) {
-      this.storeSub = this.store
-        .select("client")
-        .pipe(
-          map(clientState => {
-            return clientState.clients.find((_, index) => {
-              return index === this.index;
-            });
-          })
-        )
-        .subscribe(existingClient => {
-          this.client = existingClient;
-        });
+      this.initEditFormAttributes();
     }
 
+    this.instantiateClientForm();
+  }
+
+  private setFormDefaultValues() {
+    this.stateIndex = STATE_INITIAL_INDEX;
+  }
+
+  private instantiateClientForm() {
     this.clientForm = new FormGroup({
       firstName: new FormControl(this.client.firstName, [
         Validators.required,
@@ -157,7 +161,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
         Validators.pattern(regexMask.TEXT)
       ),
       state: new FormControl(
-        this.client.state,
+        this.stateIndex,
         Validators.pattern(regexMask.TEXT)
       ),
       postalCode: new FormControl(
@@ -171,5 +175,26 @@ export class ClientEditComponent implements OnInit, OnDestroy {
       active: new FormControl(this.client.active, Validators.required),
       fields: new FormArray(this.createFieldsControls(this.client.fields))
     });
+  }
+
+  private initEditFormAttributes() {
+    this.storeSub = this.store
+      .select("client")
+      .pipe(
+        map(clientState => {
+          return clientState.clients.find((_, index) => {
+            return index === this.index;
+          });
+        })
+      )
+      .subscribe(existingClient => {
+        this.client = existingClient;
+        this.stateIndex = this.getClientStateIndex(this.stateIndex);
+      });
+  }
+
+  private getClientStateIndex(state: number) {
+    state = states.map(s => s.name).indexOf(this.client.state);
+    return state;
   }
 }

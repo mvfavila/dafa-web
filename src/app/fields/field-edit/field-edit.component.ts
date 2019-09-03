@@ -7,11 +7,14 @@ import { map, tap } from "rxjs/operators";
 
 import { Event } from "../../shared/models/event.model";
 import { Client } from "src/app/shared/models/client.model";
+import { Field } from "src/app/shared/models/field.model";
 import { EventType } from "src/app/shared/models/eventType.model";
+import { regexMask } from "src/app/shared/regex";
 import * as fromApp from "src/app/store/app.reducer";
-import * as FieldActions from "../store/field.actions";
 import * as ClientActions from "../../clients/store/client.actions";
 import * as EventTypeActions from "../../event-types/store/event-type.actions";
+
+const CLIENT_INITIAL_INDEX = -1;
 
 @Component({
   selector: "app-field-edit",
@@ -22,8 +25,10 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   idSubscription: Subscription;
   id: number;
   isEditMode = false;
+  field: Field;
   fieldForm: FormGroup;
   clients: Client[] = [];
+  clientIndex: number;
   events: Event[] = [];
   eventTypes: EventType[] = [];
 
@@ -49,8 +54,9 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     this.idSubscription = this.route.params.subscribe((params: Params) => {
       this.id = +params.id;
       this.isEditMode = params.id != null;
-      this.initForm();
     });
+    this.field = Field.new();
+    this.initForm();
   }
 
   onSubmit() {
@@ -128,46 +134,75 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   }
 
   private initForm() {
-    let name = "";
-    let description = "";
-    let email = "";
-    let clientEvents: Event[] = [];
-    let client = -1;
-
     this.loadClients();
+    this.setFormDefaultValues();
 
     if (this.isEditMode) {
-      this.fieldStoreSub = this.store
-        .select("field")
-        .pipe(
-          map(fieldState => {
-            return fieldState.fields.find((_, index) => {
-              return index === this.id;
-            });
-          })
-        )
-        .subscribe(editedField => {
-          name = editedField.name;
-          description = editedField.description;
-          email = editedField.email;
-          clientEvents = editedField.events;
-          client = this.clients
-            .map(c => c._id.toString())
-            .indexOf(editedField.client.toString());
-        });
-
-      if (clientEvents.length > 0) {
-        this.loadEventTypes();
-      }
+      this.initEditFormAttributes();
     }
 
+    this.instantiateFieldForm();
+  }
+
+  private setFormDefaultValues() {
+    this.clientIndex = CLIENT_INITIAL_INDEX;
+  }
+
+  private instantiateFieldForm() {
     this.fieldForm = new FormGroup({
-      name: new FormControl(name, Validators.required),
-      description: new FormControl(description, Validators.required),
-      email: new FormControl(email, Validators.required),
-      events: new FormArray(this.createEventsControls(clientEvents)),
-      client: new FormControl(client, Validators.required)
+      name: new FormControl(this.field.name, [
+        Validators.required,
+        Validators.pattern(regexMask.TEXT)
+      ]),
+      description: new FormControl(this.field.description),
+      email: new FormControl(
+        this.field.email,
+        Validators.pattern(regexMask.EMAIL)
+      ),
+      address: new FormControl(
+        this.field.address,
+        Validators.pattern(regexMask.TEXT)
+      ),
+      city: new FormControl(
+        this.field.city,
+        Validators.pattern(regexMask.TEXT)
+      ),
+      state: new FormControl(
+        this.field.state,
+        Validators.pattern(regexMask.TEXT)
+      ),
+      postalCode: new FormControl(
+        this.field.postalCode,
+        Validators.pattern(regexMask.POSTAL_CODE)
+      ),
+      events: new FormArray(
+        this.createEventsControls(this.field.events),
+        Validators.required
+      ),
+      client: new FormControl(this.clientIndex, Validators.required),
+      active: new FormControl(this.field.active, Validators.required)
     });
+  }
+
+  private initEditFormAttributes() {
+    this.fieldStoreSub = this.store
+      .select("field")
+      .pipe(
+        map(fieldState => {
+          return fieldState.fields.find((_, index) => {
+            return index === this.id;
+          });
+        })
+      )
+      .subscribe(editedField => {
+        this.field = editedField;
+        this.clientIndex = this.clients
+          .map(c => c._id.toString())
+          .indexOf(editedField.client.toString());
+      });
+    if (this.field.events.length > 0) {
+      this.loadEventTypes();
+    }
   }
 
   private loadClients() {
