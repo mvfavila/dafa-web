@@ -13,6 +13,7 @@ import { regexMask } from "src/app/shared/regex";
 import { states } from "../../shared/states";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../../clients/store/client.actions";
+import * as FieldActions from "../../fields/store/field.actions";
 import * as EventTypeActions from "../../event-types/store/event-type.actions";
 
 const SELECT_FIELDS_INITIAL_INDEX = -1;
@@ -63,19 +64,49 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    console.log(`Form value: ${JSON.stringify(this.fieldForm.value, null, 2)}`);
+    if (this.isEditMode) {
+      this.dispatchUpdateFieldAction();
+    } else {
+      this.dispatchAddFieldAction();
+    }
+    this.navigateUp();
+  }
 
-    // if (this.isEditMode) {
-    //   this.store.dispatch(
-    //     FieldActions.updateField({
-    //       index: this.id,
-    //       field: this.fieldForm.value
-    //     })
-    //   );
-    // } else {
-    //   this.store.dispatch(FieldActions.addField(this.fieldForm.value));
-    // }
-    // this.router.navigate(["../"], { relativeTo: this.route });
+  private navigateUp() {
+    this.router.navigate(["../"], { relativeTo: this.route });
+  }
+
+  private dispatchAddFieldAction() {
+    this.store.dispatch(
+      FieldActions.addField({ field: this.fillFieldObject() })
+    );
+  }
+
+  private dispatchUpdateFieldAction() {
+    this.store.dispatch(
+      FieldActions.updateField({
+        index: this.index,
+        field: this.fillFieldObject()
+      })
+    );
+  }
+
+  private fillFieldObject(): Field {
+    const newField: Field = { ...this.field };
+    const fieldForm = this.fieldForm.value;
+
+    newField.name = fieldForm.name;
+    newField.description = fieldForm.description;
+    newField.email = fieldForm.email;
+    newField.address = fieldForm.address;
+    newField.city = fieldForm.city;
+    newField.state = fieldForm.state;
+    newField.postalCode = fieldForm.postalCode;
+    newField.client = fieldForm.client;
+    newField.active = fieldForm.active;
+    newField.events = fieldForm.events;
+
+    return newField;
   }
 
   onAddEvent() {
@@ -171,18 +202,12 @@ export class FieldEditComponent implements OnInit, OnDestroy {
         this.field.city,
         Validators.pattern(regexMask.TEXT)
       ),
-      state: new FormControl(
-        this.stateIndex,
-        Validators.pattern(regexMask.TEXT)
-      ),
+      state: new FormControl(this.stateIndex),
       postalCode: new FormControl(
         this.field.postalCode,
         Validators.pattern(regexMask.POSTAL_CODE)
       ),
-      events: new FormArray(
-        this.createEventsControls(this.field.events),
-        Validators.required
-      ),
+      events: new FormArray(this.createEventsControls(this.field.events)),
       client: new FormControl(this.clientIndex, Validators.required),
       active: new FormControl(this.field.active, Validators.required)
     });
