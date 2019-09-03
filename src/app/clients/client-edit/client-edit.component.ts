@@ -189,12 +189,12 @@ export class ClientEditComponent implements OnInit, OnDestroy {
       )
       .subscribe(existingClient => {
         this.client = existingClient;
-        this.stateIndex = this.getClientStateIndex(this.stateIndex);
+        this.stateIndex = this.getStateIndex();
       });
   }
 
-  private getClientStateIndex(state: number) {
-    state = states.map(s => s.name).indexOf(this.client.state);
-    return state;
+  private getStateIndex() {
+    const stateIndex = states.map(s => s.name).indexOf(this.client.state);
+    return stateIndex;
   }
 }

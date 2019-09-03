@@ -10,11 +10,12 @@ import { Client } from "src/app/shared/models/client.model";
 import { Field } from "src/app/shared/models/field.model";
 import { EventType } from "src/app/shared/models/eventType.model";
 import { regexMask } from "src/app/shared/regex";
+import { states } from "../../shared/states";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../../clients/store/client.actions";
 import * as EventTypeActions from "../../event-types/store/event-type.actions";
 
-const CLIENT_INITIAL_INDEX = -1;
+const SELECT_FIELDS_INITIAL_INDEX = -1;
 
 @Component({
   selector: "app-field-edit",
@@ -23,7 +24,7 @@ const CLIENT_INITIAL_INDEX = -1;
 })
 export class FieldEditComponent implements OnInit, OnDestroy {
   idSubscription: Subscription;
-  id: number;
+  index: number;
   isEditMode = false;
   field: Field;
   fieldForm: FormGroup;
@@ -31,6 +32,8 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   clientIndex: number;
   events: Event[] = [];
   eventTypes: EventType[] = [];
+  states = states;
+  stateIndex: number;
 
   private fieldStoreSub: Subscription;
   private clientStoreSub: Subscription;
@@ -52,7 +55,7 @@ export class FieldEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.idSubscription = this.route.params.subscribe((params: Params) => {
-      this.id = +params.id;
+      this.index = +params.id;
       this.isEditMode = params.id != null;
     });
     this.field = Field.new();
@@ -145,7 +148,8 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   }
 
   private setFormDefaultValues() {
-    this.clientIndex = CLIENT_INITIAL_INDEX;
+    this.stateIndex = SELECT_FIELDS_INITIAL_INDEX;
+    this.clientIndex = SELECT_FIELDS_INITIAL_INDEX;
   }
 
   private instantiateFieldForm() {
@@ -168,7 +172,7 @@ export class FieldEditComponent implements OnInit, OnDestroy {
         Validators.pattern(regexMask.TEXT)
       ),
       state: new FormControl(
-        this.field.state,
+        this.stateIndex,
         Validators.pattern(regexMask.TEXT)
       ),
       postalCode: new FormControl(
@@ -190,19 +194,29 @@ export class FieldEditComponent implements OnInit, OnDestroy {
       .pipe(
         map(fieldState => {
           return fieldState.fields.find((_, index) => {
-            return index === this.id;
+            return index === this.index;
           });
         })
       )
       .subscribe(editedField => {
         this.field = editedField;
-        this.clientIndex = this.clients
-          .map(c => c._id.toString())
-          .indexOf(editedField.client.toString());
+        this.clientIndex = this.getClientIndex(editedField);
+        this.stateIndex = this.getStateIndex();
       });
     if (this.field.events.length > 0) {
       this.loadEventTypes();
     }
+  }
+
+  private getClientIndex(editedField: Field): number {
+    return this.clients
+      .map(c => c._id.toString())
+      .indexOf(editedField.client.toString());
+  }
+
+  private getStateIndex() {
+    const index = states.map(s => s.name).indexOf(this.field.state);
+    return index;
   }
 
   private loadClients() {

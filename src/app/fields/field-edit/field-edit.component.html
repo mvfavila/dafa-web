@@ -15,8 +15,10 @@
           </button>
         </div>
       </div>
+      <!-- name & email -->
       <div class="row">
-        <div class="col-xs-12">
+        <!-- name -->
+        <div class="col-xs-6">
           <div class="form-group">
             <label for="name">Name</label
             ><input
@@ -27,9 +29,23 @@
             />
           </div>
         </div>
+        <!-- email -->
+        <div class="col-xs-6">
+          <div class="form-group">
+            <label for="email">E-mail</label
+            ><input
+              type="text"
+              id="email"
+              formControlName="email"
+              class="form-control"
+            />
+          </div>
+        </div>
       </div>
+      <!-- description & client -->
       <div class="row">
-        <div class="col-xs-12">
+        <!-- description -->
+        <div class="col-xs-6">
           <div class="form-group">
             <label for="description">Description</label
             ><input
@@ -40,26 +56,12 @@
             />
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <div class="form-group">
-            <label for="email">E-mail</label
-            ><input
-              type="email"
-              id="email"
-              formControlName="email"
-              class="form-control"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
+        <!-- client -->
+        <div class="col-xs-6">
           <div class="form-group">
             <label for="client">Client</label>
             <select class="form-control" formControlName="client">
-              <option selected value="-1">Please select client</option>
+              <option selected value="-1">Please select a client</option>
               <option
                 *ngFor="let client of clients; let i = index"
                 value="{{ i }}"
@@ -67,6 +69,78 @@
                 {{ client.company | slice: 0:20 }}</option
               >
             </select>
+          </div>
+        </div>
+      </div>
+      <!-- address -->
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="address">Address</label
+            ><input
+              type="text"
+              id="address"
+              formControlName="address"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- postalCode & state & city -->
+      <div class="row">
+        <!-- postalCode -->
+        <div class="col-xs-4">
+          <div class="form-group">
+            <label for="postalCode">Postal Code</label
+            ><input
+              type="text"
+              id="postalCode"
+              formControlName="postalCode"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- state -->
+        <div class="col-xs-4">
+          <div class="form-group">
+            <label for="state">State</label>
+            <select class="form-control" formControlName="state">
+              <option selected value="-1">Please select a state</option>
+              <option
+                *ngFor="let state of states; let i = index"
+                value="{{ i }}"
+                >{{ state.name | slice: 0:20 }}</option
+              >
+            </select>
+          </div>
+        </div>
+        <!-- city -->
+        <div class="col-xs-4">
+          <div class="form-group">
+            <label for="city">City</label
+            ><input
+              type="text"
+              id="city"
+              formControlName="city"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- active -->
+      <div class="row" *ngIf="isEditMode">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="active">Active</label>
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="active"
+                formControlName="active"
+                class="form-control"
+              />
+              <span class="slider round"></span>
+            </label>
           </div>
         </div>
       </div>
