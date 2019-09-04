@@ -10,7 +10,7 @@ import { Client } from "../../shared/models/client.model";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../store/client.actions";
 import { regexMask } from "../../shared/regex";
-import { states } from "../../shared/states";
+import { states, CountryStatesCollection } from "../../shared/states";
 
 const STATE_INITIAL_INDEX = -1;
 
@@ -25,7 +25,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
   client: Client;
   isEditMode = false;
   clientForm: FormGroup;
-  states = states;
+  states: CountryStatesCollection;
   stateIndex: number;
 
   private storeSub: Subscription;
@@ -45,6 +45,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.states = states;
     this.idSubscription = this.route.params.subscribe((params: Params) => {
       this.index = +params.id;
       this.isEditMode = params.id != null;
@@ -78,7 +79,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
     newClient.company = clientForm.company;
     newClient.address = clientForm.address;
     newClient.city = clientForm.city;
-    newClient.state = clientForm.state;
+    newClient.state = this.states.getStateByIndex(clientForm.stateIndex).name;
     newClient.postalCode = clientForm.postalCode;
     newClient.email = clientForm.email;
     newClient.active = clientForm.active;
@@ -160,7 +161,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
         this.client.city,
         Validators.pattern(regexMask.TEXT)
       ),
-      state: new FormControl(
+      stateIndex: new FormControl(
         this.stateIndex,
         Validators.pattern(regexMask.TEXT)
       ),
@@ -189,12 +190,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
       )
       .subscribe(existingClient => {
         this.client = existingClient;
-        this.stateIndex = this.getStateIndex();
+        this.stateIndex = states.getStateIndex(this.client.state);
       });
-  }
-
-  private getStateIndex() {
-    const stateIndex = states.map(s => s.name).indexOf(this.client.state);
-    return stateIndex;
   }
 }

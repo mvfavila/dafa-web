@@ -3,7 +3,8 @@ import { Injectable } from "@angular/core";
 import { Actions, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { createEffect } from "@ngrx/effects";
-import { switchMap, map, withLatestFrom } from "rxjs/operators";
+import { switchMap, map, withLatestFrom, catchError } from "rxjs/operators";
+import { of } from "rxjs";
 
 import * as fromApp from "../../store/app.reducer";
 import * as FieldActions from "./field.actions";
@@ -30,6 +31,57 @@ export class FieldEffects {
       }),
       map(fields => FieldActions.setFields({ fields }))
     )
+  );
+
+  createField$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(FieldActions.addField),
+        switchMap(action => {
+          return this.http.post(fieldsUrl.POST, { field: action.field }).pipe(
+            map(_ => FieldActions.addField({ field: action.field })),
+            catchError((err: Error) =>
+              of(
+                FieldActions.addFieldFailure({
+                  field: action.field,
+                  errorMessage: `Field creation failed`,
+                  originalError: err
+                })
+              )
+            )
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  updateField$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(FieldActions.updateField),
+        switchMap(action => {
+          return this.http.put(fieldsUrl.PUT, { field: action.field }).pipe(
+            map(_ =>
+              FieldActions.updateField({
+                index: action.index,
+                field: action.field
+              })
+            ),
+            catchError((err: Error) =>
+              of(
+                FieldActions.updateFieldFailure({
+                  field: action.field,
+                  errorMessage: `Field update failed`,
+                  originalError: err
+                })
+              )
+            )
+          );
+        })
+      );
+    },
+    { dispatch: false }
   );
 
   storeFields$ = createEffect(

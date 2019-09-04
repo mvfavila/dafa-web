@@ -100,13 +100,17 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     newField.email = fieldForm.email;
     newField.address = fieldForm.address;
     newField.city = fieldForm.city;
-    newField.state = fieldForm.state;
+    newField.state = this.states.getStateByIndex(fieldForm.stateIndex).name;
     newField.postalCode = fieldForm.postalCode;
-    newField.client = fieldForm.client;
+    newField.client = this.getClientByIndex(fieldForm.client)._id;
     newField.active = fieldForm.active;
     newField.events = fieldForm.events;
 
     return newField;
+  }
+
+  private getClientByIndex(clientIndex: number) {
+    return this.clients[clientIndex];
   }
 
   onAddEvent() {
@@ -202,7 +206,7 @@ export class FieldEditComponent implements OnInit, OnDestroy {
         this.field.city,
         Validators.pattern(regexMask.TEXT)
       ),
-      state: new FormControl(this.stateIndex),
+      stateIndex: new FormControl(this.stateIndex),
       postalCode: new FormControl(
         this.field.postalCode,
         Validators.pattern(regexMask.POSTAL_CODE)
@@ -226,7 +230,7 @@ export class FieldEditComponent implements OnInit, OnDestroy {
       .subscribe(editedField => {
         this.field = editedField;
         this.clientIndex = this.getClientIndex(editedField);
-        this.stateIndex = this.getStateIndex();
+        this.stateIndex = states.getStateIndex(this.field.state);
       });
     if (this.field.events.length > 0) {
       this.loadEventTypes();
@@ -237,11 +241,6 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     return this.clients
       .map(c => c._id.toString())
       .indexOf(editedField.client.toString());
-  }
-
-  private getStateIndex() {
-    const index = states.map(s => s.name).indexOf(this.field.state);
-    return index;
   }
 
   private loadClients() {

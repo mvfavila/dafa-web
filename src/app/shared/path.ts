@@ -16,7 +16,8 @@ export const clientsUrl = {
 const FIELDS_PATH = `${environment.apiUrl}/fields`;
 export const fieldsUrl = {
   GET_ALL: FIELDS_PATH,
-  POST: FIELDS_PATH
+  POST: FIELDS_PATH,
+  PUT: FIELDS_PATH
 };
 
 const EVENTS_PATH = `${environment.apiUrl}/events`;

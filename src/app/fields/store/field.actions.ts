@@ -6,9 +6,19 @@ export const addField = createAction(
   props<{ field: Field }>()
 );
 
+export const addFieldFailure = createAction(
+  "[Field] Add Field - Failure",
+  props<{ field?: Field; errorMessage: string; originalError?: Error }>()
+);
+
 export const updateField = createAction(
   "[Field] Update Field",
   props<{ index: number; field: Field }>()
+);
+
+export const updateFieldFailure = createAction(
+  "[Field] Update Field - Failure",
+  props<{ field?: Field; errorMessage: string; originalError?: Error }>()
 );
 
 export const deleteField = createAction(
