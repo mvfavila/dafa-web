@@ -83,21 +83,12 @@ export class ClientEditComponent implements OnInit, OnDestroy {
     newClient.postalCode = clientForm.postalCode;
     newClient.email = clientForm.email;
     newClient.active = clientForm.active;
-    newClient.fields = clientForm.fields;
 
     return newClient;
   }
 
-  onManageClient() {
-    // this.router.navigate(["../", "fields"], { relativeTo: this.route });
-  }
-
   onCancel() {
     this.router.navigate(["../"], { relativeTo: this.route });
-  }
-
-  onDeleteField(index: number) {
-    this.getFields().removeAt(index);
   }
 
   ngOnDestroy() {
@@ -107,22 +98,6 @@ export class ClientEditComponent implements OnInit, OnDestroy {
     if (this.storeSub) {
       this.storeSub.unsubscribe();
     }
-  }
-
-  private createFieldsControls(fields: Field[]): FormControl[] {
-    const fieldsControls = [];
-    fields.forEach(field => {
-      fieldsControls.push(
-        new FormGroup({
-          name: new FormControl(field.name, Validators.required),
-          city: new FormControl(field.city, [
-            Validators.required
-            // Validators.pattern(/^[1-9]+[0-9]*$/)
-          ])
-        })
-      );
-    });
-    return fieldsControls;
   }
 
   private initForm() {
@@ -173,8 +148,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.pattern(regexMask.EMAIL)
       ]),
-      active: new FormControl(this.client.active, Validators.required),
-      fields: new FormArray(this.createFieldsControls(this.client.fields))
+      active: new FormControl(this.client.active, Validators.required)
     });
   }
 

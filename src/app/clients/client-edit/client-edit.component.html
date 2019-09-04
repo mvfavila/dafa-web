@@ -141,45 +141,6 @@
           </div>
         </div>
       </div>
-      <!-- fields -->
-      <div class="row">
-        <div class="col-xs-12" formArrayName="fields">
-          <div
-            class="row"
-            *ngFor="let fieldControl of fieldsControls; let i = index"
-            style="margin-top: 5px"
-            [formGroupName]="i"
-          >
-            <div class="col-xs-8">
-              <input type="text" formControlName="name" class="form-control" />
-            </div>
-            <div class="col-xs-2">
-              <input type="text" formControlName="city" class="form-control" />
-            </div>
-            <div class="col-xs-2">
-              <button
-                type="button"
-                class="btn btn-danger"
-                (click)="onDeleteField(i)"
-              >
-                X
-              </button>
-            </div>
-          </div>
-          <hr />
-          <div class="row">
-            <div class="col-xs-12">
-              <button
-                class="btn btn-success"
-                type="button"
-                (click)="onManageClient()"
-              >
-                Manage Client
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </form>
   </div>
 </div>
