@@ -111,7 +111,7 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     newField.city = fieldForm.city;
     newField.state = this.states.getStateByIndex(fieldForm.stateIndex).name;
     newField.postalCode = fieldForm.postalCode;
-    newField.client = this.getClientByIndex(fieldForm.client)._id;
+    newField.client = this.getClientByIndex(fieldForm.clientIndex)._id;
     newField.active = fieldForm.active;
     newField.events = fieldForm.events;
 
