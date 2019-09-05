@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { FormGroup, FormControl, FormArray, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
@@ -23,7 +23,7 @@ const SELECT_FIELDS_INITIAL_INDEX = -1;
   templateUrl: "./field-edit.component.html",
   styleUrls: ["./field-edit.component.css"]
 })
-export class FieldEditComponent implements OnInit, OnDestroy {
+export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
   idSubscription: Subscription;
   index: number;
   isEditMode = false;
@@ -61,6 +61,15 @@ export class FieldEditComponent implements OnInit, OnDestroy {
     });
     this.field = Field.new();
     this.initForm();
+  }
+
+  ngDoCheck(): void {
+    // TODO: there may be a better way to do this.
+    // this is necessary for a page refresh when in edit mode
+    if (this.isEditMode && this.clients.length > 0) {
+      this.clientIndex = this.getClientIndex(this.field);
+      this.fieldForm.controls.clientIndex.setValue(this.clientIndex);
+    }
   }
 
   onSubmit() {
@@ -212,7 +221,7 @@ export class FieldEditComponent implements OnInit, OnDestroy {
         Validators.pattern(regexMask.POSTAL_CODE)
       ),
       events: new FormArray(this.createEventsControls(this.field.events)),
-      client: new FormControl(this.clientIndex, Validators.required),
+      clientIndex: new FormControl(this.clientIndex, Validators.required),
       active: new FormControl(this.field.active, Validators.required)
     });
   }
@@ -244,7 +253,15 @@ export class FieldEditComponent implements OnInit, OnDestroy {
   }
 
   private loadClients() {
+    this.fetchClients();
+    this.loadClientsStore();
+  }
+
+  private fetchClients() {
     this.store.dispatch(ClientActions.fetchClients());
+  }
+
+  private loadClientsStore() {
     this.clientStoreSub = this.store
       .select("client")
       .pipe(
