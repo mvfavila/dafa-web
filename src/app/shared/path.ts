@@ -23,7 +23,8 @@ export const fieldsUrl = {
 const EVENTS_PATH = `${environment.apiUrl}/events`;
 export const eventsUrl = {
   GET_ALL: EVENTS_PATH,
-  POST: EVENTS_PATH
+  POST: EVENTS_PATH,
+  PUT: EVENTS_PATH
 };
 
 const EVENT_TYPES_PATH = `${environment.apiUrl}/eventTypes`;

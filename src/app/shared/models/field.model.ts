@@ -1,4 +1,5 @@
 import { Event } from "./event.model";
+import { Guid } from "../guid";
 
 export class Field {
   constructor(
@@ -18,7 +19,7 @@ export class Field {
   ) {}
 
   public static new(): Field {
-    const id = "";
+    const id = Guid.new();
     const name = "";
     const description = "";
     const email = "";

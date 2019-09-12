@@ -11,9 +11,11 @@ import { Field } from "src/app/shared/models/field.model";
 import { EventType } from "src/app/shared/models/eventType.model";
 import { regexMask } from "src/app/shared/regex";
 import { states } from "../../shared/states";
+import { Guid } from "src/app/shared/guid";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../../clients/store/client.actions";
 import * as FieldActions from "../../fields/store/field.actions";
+import * as EventActions from "../../events/store/event.actions";
 import * as EventTypeActions from "../../event-types/store/event-type.actions";
 
 const SELECT_FIELDS_INITIAL_INDEX = -1;
@@ -61,6 +63,14 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     });
     this.field = Field.new();
     this.initForm();
+
+    this.fieldForm.controls.name.setValue("Teste");
+    this.fieldForm.controls.description.setValue("Testando isso");
+    this.fieldForm.controls.email.setValue("testando@isso.com");
+    this.fieldForm.controls.address.setValue("15 Eric Road");
+    this.fieldForm.controls.city.setValue("Melbourne");
+    this.fieldForm.controls.stateIndex.setValue(0);
+    this.fieldForm.controls.postalCode.setValue("49000-000");
   }
 
   ngDoCheck(): void {
@@ -86,9 +96,19 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   private dispatchAddFieldAction() {
-    this.store.dispatch(
-      FieldActions.addField({ field: this.fillFieldObject() })
-    );
+    const field = this.fillFieldObject();
+    this.addEvents(field.events);
+    this.addField(field);
+  }
+
+  private addEvents(events: Event[]) {
+    events.forEach(event => {
+      this.store.dispatch(EventActions.addEvent({ event }));
+    });
+  }
+
+  private addField(field: Field) {
+    this.store.dispatch(FieldActions.addField({ field }));
   }
 
   private dispatchUpdateFieldAction() {
@@ -113,9 +133,25 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     newField.postalCode = fieldForm.postalCode;
     newField.client = this.getClientByIndex(fieldForm.clientIndex)._id;
     newField.active = fieldForm.active;
-    newField.events = fieldForm.events;
+    newField.events = this.formatEvents(fieldForm.events, newField._id);
 
     return newField;
+  }
+
+  private formatEvents(events: Event[], fieldId: string): Event[] {
+    const newEvents: Event[] = [];
+
+    events.forEach((event: Event) => {
+      const formattedEvent = Event.new();
+
+      formattedEvent._id = Guid.new();
+      formattedEvent.date = event.date;
+      formattedEvent.eventType = event.eventType;
+      formattedEvent.field = fieldId;
+      newEvents.push(formattedEvent);
+    });
+
+    return newEvents;
   }
 
   private getClientByIndex(clientIndex: number) {
@@ -126,15 +162,14 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     if (this.eventTypes && this.eventTypes.length === 0) {
       this.loadEventTypes();
     }
-    this.getEvents().push(
-      new FormGroup({
-        eventType: new FormControl(-1, Validators.required),
-        date: new FormControl(Date.now(), [
-          Validators.required
-          // Validators.pattern(/^[1-9]+[0-9]*$/)
-        ])
-      })
-    );
+    const newEvent = Event.new();
+    this.events.push(newEvent);
+    const eventFormGroup = new FormGroup({
+      eventId: new FormControl(newEvent._id),
+      eventType: new FormControl(-1, Validators.required),
+      date: new FormControl(newEvent.date, Validators.required)
+    });
+    this.getEvents().push(eventFormGroup);
   }
 
   onCancel() {
@@ -142,6 +177,7 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   onDeleteEvent(index: number) {
+    this.events.splice(index, 1);
     this.getEvents().removeAt(index);
   }
 
@@ -160,24 +196,11 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     }
   }
 
-  private createEventsControls(events: Event[]): FormControl[] {
-    const eventsControls = [];
-    events.forEach(event => {
-      eventsControls.push(
-        new FormGroup({
-          eventTypeName: new FormControl(
-            event.eventType ? event.eventType.name : null,
-            Validators.required
-          ),
-          date: new FormControl(event.date, Validators.required),
-          active: new FormControl(event.active, [
-            Validators.required
-            // Validators.pattern(/^[1-9]+[0-9]*$/)
-          ])
-        })
-      );
+  private getEventType(eventTypeId: string): EventType {
+    const eventType = this.eventTypes.find(et => {
+      return et._id === eventTypeId;
     });
-    return eventsControls;
+    return eventType;
   }
 
   private initForm() {
@@ -224,6 +247,24 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
       clientIndex: new FormControl(this.clientIndex, Validators.required),
       active: new FormControl(this.field.active, Validators.required)
     });
+  }
+
+  private createEventsControls(events: Event[]): FormControl[] {
+    const eventsControls = [];
+    events.forEach(event => {
+      const eventTypeName =
+        this.eventTypes.length > 0
+          ? this.getEventType(event.eventType).name
+          : null;
+      eventsControls.push(
+        new FormGroup({
+          eventId: new FormControl(event._id, Validators.required),
+          eventType: new FormControl(eventTypeName, Validators.required),
+          date: new FormControl(event.date, Validators.required)
+        })
+      );
+    });
+    return eventsControls;
   }
 
   private initEditFormAttributes() {

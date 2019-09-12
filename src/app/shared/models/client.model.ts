@@ -1,4 +1,5 @@
 import { Field } from "./field.model";
+import { Guid } from "../guid";
 
 export class Client {
   constructor(
@@ -18,7 +19,7 @@ export class Client {
   ) {}
 
   public static new(): Client {
-    const id = "";
+    const id = Guid.new();
     const firstName = "";
     const lastName = "";
     const company = "";

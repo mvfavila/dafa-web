@@ -3,7 +3,8 @@ import { Injectable } from "@angular/core";
 import { Actions, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { createEffect } from "@ngrx/effects";
-import { switchMap, map, withLatestFrom } from "rxjs/operators";
+import { switchMap, map, withLatestFrom, catchError } from "rxjs/operators";
+import { of } from "rxjs";
 
 import * as fromApp from "../../store/app.reducer";
 import * as EventActions from "./event.actions";
@@ -29,6 +30,57 @@ export class EventEffects {
       }),
       map(events => EventActions.setEvents({ events }))
     )
+  );
+
+  createEvent$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(EventActions.addEvent),
+        switchMap(action => {
+          return this.http.post(eventsUrl.POST, { event: action.event }).pipe(
+            map(_ => EventActions.addEvent({ event: action.event })),
+            catchError((err: Error) =>
+              of(
+                EventActions.addEventFailure({
+                  event: action.event,
+                  errorMessage: `Event creation failed`,
+                  originalError: err
+                })
+              )
+            )
+          );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  updateEvent$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(EventActions.updateEvent),
+        switchMap(action => {
+          return this.http.put(eventsUrl.PUT, { event: action.event }).pipe(
+            map(_ =>
+              EventActions.updateEvent({
+                index: action.index,
+                event: action.event
+              })
+            ),
+            catchError((err: Error) =>
+              of(
+                EventActions.updateEventFailure({
+                  event: action.event,
+                  errorMessage: `Event update failed`,
+                  originalError: err
+                })
+              )
+            )
+          );
+        })
+      );
+    },
+    { dispatch: false }
   );
 
   storeEvents$ = createEffect(

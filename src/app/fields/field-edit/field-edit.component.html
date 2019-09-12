@@ -144,9 +144,10 @@
           </div>
         </div>
       </div>
+      <!-- events -->
       <div class="row">
         <div class="col-xs-12" formArrayName="events">
-          <label for="client" *ngIf="eventsControls.length > 0">Events</label>
+          <label for="events" *ngIf="eventsControls.length > 0">Events</label>
           <div
             class="row"
             *ngFor="let eventControl of eventsControls; let i = index"
@@ -155,10 +156,10 @@
           >
             <div class="col-xs-8">
               <select class="form-control" formControlName="eventType">
-                <option selected value="-1">Please select an event type</option>
+                <option value="-1">Please select an event type</option>
                 <option
                   *ngFor="let eventType of eventTypes; let i = index"
-                  value="{{ i }}"
+                  value="{{ eventType }}"
                   >{{ eventType.name | slice: 0:15 }} -
                   {{ eventType.description | slice: 0:20 }}</option
                 >

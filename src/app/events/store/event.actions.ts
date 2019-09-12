@@ -6,9 +6,19 @@ export const addEvent = createAction(
   props<{ event: Event }>()
 );
 
+export const addEventFailure = createAction(
+  "[Event] Add Event - Failure",
+  props<{ event?: Event; errorMessage: string; originalError?: Error }>()
+);
+
 export const updateEvent = createAction(
   "[Event] Update Event",
   props<{ index: number; event: Event }>()
+);
+
+export const updateEventFailure = createAction(
+  "[Event] Update Event - Failure",
+  props<{ event?: Event; errorMessage: string; originalError?: Error }>()
 );
 
 export const deleteEvent = createAction(
