@@ -146,7 +146,7 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
 
       formattedEvent._id = Guid.new();
       formattedEvent.date = event.date;
-      formattedEvent.eventType = event.eventType;
+      formattedEvent.eventType = this.getEventTypeByIndex(event.eventType)._id;
       formattedEvent.field = fieldId;
       newEvents.push(formattedEvent);
     });
@@ -200,6 +200,11 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     const eventType = this.eventTypes.find(et => {
       return et._id === eventTypeId;
     });
+    return eventType;
+  }
+
+  private getEventTypeByIndex(index: number | string): EventType {
+    const eventType = this.eventTypes[+index];
     return eventType;
   }
 

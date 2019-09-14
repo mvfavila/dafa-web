@@ -159,7 +159,7 @@
                 <option value="-1">Please select an event type</option>
                 <option
                   *ngFor="let eventType of eventTypes; let i = index"
-                  value="{{ eventType }}"
+                  value="{{ i }}"
                   >{{ eventType.name | slice: 0:15 }} -
                   {{ eventType.description | slice: 0:20 }}</option
                 >
