@@ -63,14 +63,6 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     });
     this.field = Field.new();
     this.initForm();
-
-    this.fieldForm.controls.name.setValue("Teste");
-    this.fieldForm.controls.description.setValue("Testando isso");
-    this.fieldForm.controls.email.setValue("testando@isso.com");
-    this.fieldForm.controls.address.setValue("15 Eric Road");
-    this.fieldForm.controls.city.setValue("Melbourne");
-    this.fieldForm.controls.stateIndex.setValue(0);
-    this.fieldForm.controls.postalCode.setValue("49000-000");
   }
 
   ngDoCheck(): void {
