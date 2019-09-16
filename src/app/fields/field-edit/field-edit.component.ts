@@ -256,6 +256,7 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
       activeEventTypes => {
         this.eventTypes = activeEventTypes;
 
+        this.resetEventControl();
         this.events.forEach(event => {
           const eventTypeIndex =
             this.eventTypes.length > 0
@@ -274,6 +275,11 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
         });
       }
     );
+  }
+  resetEventControl() {
+    while ((this.fieldForm.get("events") as FormArray).length > 0) {
+      (this.fieldForm.get("events") as FormArray).removeAt(0);
+    }
   }
 
   getDateYYYYMMDD(date: Date): string {
