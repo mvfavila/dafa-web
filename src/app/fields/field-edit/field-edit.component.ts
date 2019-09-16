@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { FormGroup, FormControl, FormArray, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
-import { Subscription } from "rxjs";
+import { Subscription, Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 import { Event } from "../../shared/models/event.model";
@@ -152,7 +152,11 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
 
   onAddEvent() {
     if (this.eventTypes && this.eventTypes.length === 0) {
-      this.loadEventTypes();
+      this.eventTypeStoreSub = this.loadEventTypes().subscribe(
+        activeEventTypes => {
+          this.eventTypes = activeEventTypes;
+        }
+      );
     }
     const newEvent = Event.new();
     this.events.push(newEvent);
@@ -240,28 +244,43 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
         this.field.postalCode,
         Validators.pattern(regexMask.POSTAL_CODE)
       ),
-      events: new FormArray(this.createEventsControls(this.field.events)),
+      events: new FormArray([]),
       clientIndex: new FormControl(this.clientIndex, Validators.required),
       active: new FormControl(this.field.active, Validators.required)
     });
+    this.createEventsControls();
   }
 
-  private createEventsControls(events: Event[]): FormControl[] {
-    const eventsControls = [];
-    events.forEach(event => {
-      const eventTypeName =
-        this.eventTypes.length > 0
-          ? this.getEventType(event.eventType).name
-          : null;
-      eventsControls.push(
-        new FormGroup({
-          eventId: new FormControl(event._id, Validators.required),
-          eventType: new FormControl(eventTypeName, Validators.required),
-          date: new FormControl(event.date, Validators.required)
-        })
-      );
-    });
-    return eventsControls;
+  private createEventsControls() {
+    this.eventTypeStoreSub = this.loadEventTypes().subscribe(
+      activeEventTypes => {
+        this.eventTypes = activeEventTypes;
+
+        this.events.forEach(event => {
+          const eventTypeIndex =
+            this.eventTypes.length > 0
+              ? this.getEventTypeIndex(event.eventType)
+              : -1;
+          (this.fieldForm.get("events") as FormArray).push(
+            new FormGroup({
+              eventId: new FormControl(event._id, Validators.required),
+              eventType: new FormControl(eventTypeIndex, Validators.required),
+              date: new FormControl(
+                this.getDateYYYYMMDD(event.date),
+                Validators.required
+              )
+            })
+          );
+        });
+      }
+    );
+  }
+
+  getDateYYYYMMDD(date: Date): string {
+    const DATE_TIME_SEPARATOR = "T";
+    const dateString = date.toString().split(DATE_TIME_SEPARATOR);
+    const formatedDate = dateString[0];
+    return formatedDate;
   }
 
   private initEditFormAttributes() {
@@ -276,11 +295,16 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
       )
       .subscribe(editedField => {
         this.field = editedField;
+        this.events = this.field.events;
         this.clientIndex = this.getClientIndex(editedField);
         this.stateIndex = states.getStateIndex(this.field.state);
       });
     if (this.field.events.length > 0) {
-      this.loadEventTypes();
+      this.eventTypeStoreSub = this.loadEventTypes().subscribe(
+        activeEventTypes => {
+          this.eventTypes = activeEventTypes;
+        }
+      );
     }
   }
 
@@ -288,6 +312,10 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     return this.clients
       .map(c => c._id.toString())
       .indexOf(editedField.client.toString());
+  }
+
+  private getEventTypeIndex(eventTypeId: string): number {
+    return this.eventTypes.map(et => et._id.toString()).indexOf(eventTypeId);
   }
 
   private loadClients() {
@@ -317,22 +345,17 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
       });
   }
 
-  private loadEventTypes() {
+  private loadEventTypes(): Observable<EventType[]> {
     this.store.dispatch(EventTypeActions.fetchEventTypes());
-    this.eventTypeStoreSub = this.store
-      .select("eventType")
-      .pipe(
-        map(eventTypeState => {
-          return eventTypeState.eventTypes.filter(c => {
-            return c.active;
-          });
-        }),
-        tap(results => {
-          results.sort();
-        })
-      )
-      .subscribe(activeEventTypes => {
-        this.eventTypes = activeEventTypes;
-      });
+    return this.store.select("eventType").pipe(
+      map(eventTypeState => {
+        return eventTypeState.eventTypes.filter(c => {
+          return c.active;
+        });
+      }),
+      tap(results => {
+        results.sort();
+      })
+    );
   }
 }
