@@ -136,7 +136,7 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     events.forEach((event: Event) => {
       const formattedEvent = Event.new();
 
-      formattedEvent._id = Guid.new();
+      formattedEvent._id = Guid.isGuid(event._id) ? event._id : Guid.new();
       formattedEvent.date = event.date;
       formattedEvent.eventType = this.getEventTypeByIndex(event.eventType)._id;
       formattedEvent.field = fieldId;
@@ -161,7 +161,7 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     const newEvent = Event.new();
     this.events.push(newEvent);
     const eventFormGroup = new FormGroup({
-      eventId: new FormControl(newEvent._id),
+      _id: new FormControl(newEvent._id),
       eventType: new FormControl(-1, Validators.required),
       date: new FormControl(newEvent.date, Validators.required)
     });
@@ -264,7 +264,7 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
               : -1;
           (this.fieldForm.get("events") as FormArray).push(
             new FormGroup({
-              eventId: new FormControl(event._id, Validators.required),
+              _id: new FormControl(event._id, Validators.required),
               eventType: new FormControl(eventTypeIndex, Validators.required),
               date: new FormControl(
                 this.getDateYYYYMMDD(event.date),
