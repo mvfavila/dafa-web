@@ -63,7 +63,7 @@ i Using project dafa-web (dafa-web)
 
 In cmd:
 
-Dafa\dafa-web>firebase deploy
+Dafa\dafa-web>npm run deploy
 
 === Deploying to 'dafa-web'...
 
