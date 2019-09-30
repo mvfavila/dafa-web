@@ -25,6 +25,9 @@
         <li routerLinkDirective="active" *ngIf="isAuthenticated">
           <a routerLink="/clients">Clientes</a>
         </li>
+        <li routerLinkDirective="active" *ngIf="isAuthenticated">
+          <a routerLink="/eventTypes">Event Types</a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li *ngIf="isAuthenticated">

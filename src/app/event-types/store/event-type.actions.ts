@@ -6,9 +6,27 @@ export const addEventType = createAction(
   props<{ eventType: EventType }>()
 );
 
+export const addEventTypeFailure = createAction(
+  "[EventType] Add EventType - Failure",
+  props<{
+    eventType?: EventType;
+    errorMessage: string;
+    originalError?: Error;
+  }>()
+);
+
 export const updateEventType = createAction(
   "[EventType] Update EventType",
   props<{ index: number; eventType: EventType }>()
+);
+
+export const updateEventTypeFailure = createAction(
+  "[EventType] Update EventType - Failure",
+  props<{
+    eventType?: EventType;
+    errorMessage: string;
+    originalError?: Error;
+  }>()
 );
 
 export const deleteEventType = createAction(

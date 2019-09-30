@@ -1,30 +1,26 @@
 import { Guid } from "../guid";
-import { AlertType } from "./alertType.model";
 
-export class EventType {
+export class AlertType {
   constructor(
     public _id: string,
     public name: string,
-    public description: string,
-    public alertTypes: AlertType[],
+    public numberOfDaysToWarning: string,
     public createdAt: Date,
     public updatedAt: Date,
     public active: boolean
   ) {}
 
-  public static new(): EventType {
+  public static new(): AlertType {
     const id = Guid.new();
     const name = "";
-    const description = "";
-    const alertTypes: AlertType[] = [];
+    const numberOfDaysToWarning = "";
     const createdAt = new Date();
     const updatedAt = createdAt;
     const active = true;
-    return new EventType(
+    return new AlertType(
       id,
       name,
-      description,
-      alertTypes,
+      numberOfDaysToWarning,
       createdAt,
       updatedAt,
       active

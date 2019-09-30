@@ -17,6 +17,16 @@ const appChildRoutes: Routes = [
     path: "fields",
     loadChildren: () =>
       import("./fields/fields.module").then(m => m.FieldsModule)
+  },
+  {
+    path: "eventTypes",
+    loadChildren: () =>
+      import("./event-types/event-types.module").then(m => m.EventTypesModule)
+  },
+  {
+    path: "alertTypes",
+    loadChildren: () =>
+      import("./alert-types/alert-types.module").then(m => m.AlertTypesModule)
   }
 ];
 

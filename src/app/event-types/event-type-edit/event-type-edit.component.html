@@ -1,0 +1,131 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form [formGroup]="eventTypeForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-xs-12">
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="!eventTypeForm.valid"
+          >
+            Save
+          </button>
+          <button type="button" class="btn btn-danger" (click)="onCancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <!-- name -->
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="name">Name</label
+            ><input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- description -->
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="description">Description</label
+            ><input
+              type="text"
+              id="description"
+              formControlName="description"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- active -->
+      <div class="row" *ngIf="isEditMode">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="active">Active</label>
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="active"
+                formControlName="active"
+                class="form-control"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <!-- Add alert type option -->
+      <div class="row" *ngIf="existingAlertTypes.length > 0">
+        <hr />
+        <div class="col-xs-10">
+          <select class="form-control" formControlName="selectedAlertType">
+            <option value="-1">Please select an alert type</option>
+            <option
+              *ngFor="let alertType of existingAlertTypes; let i = index"
+              value="{{ i }}"
+              >{{ alertType.name | slice: 0:15 }} -
+              {{ alertType.numberOfDaysToWarning }} dias</option
+            >
+          </select>
+        </div>
+        <div class="col-xs-2">
+          <button
+            [disabled]="selectedAlertType.value == -1"
+            class="btn btn-success"
+            type="button"
+            (click)="onAddAlertType()"
+          >
+            Add Alert Type
+          </button>
+        </div>
+      </div>
+      <!-- alertTypes -->
+      <div class="row">
+        <hr *ngIf="alertTypeControls.length > 0" />
+        <div class="col-xs-12" formArrayName="alertTypes">
+          <label for="alertTypes" *ngIf="alertTypeControls.length > 0"
+            >Alert Types</label
+          >
+          <div
+            class="row"
+            *ngFor="let alertTypeControl of alertTypeControls; let i = index"
+            style="margin-top: 5px"
+            [formGroupName]="i"
+          >
+            <div class="col-xs-8">
+              <input
+                disabled
+                type="name"
+                formControlName="name"
+                class="form-control"
+              />
+            </div>
+            <div class="col-xs-3">
+              <input
+                disabled
+                type="numberOfDaysToWarning"
+                formControlName="numberOfDaysToWarning"
+                class="form-control"
+              />
+            </div>
+            <div class="col-xs-1">
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="onDeleteAlertType(i)"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

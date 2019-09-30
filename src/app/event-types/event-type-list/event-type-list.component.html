@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-xs-12">
+    <button class="btn btn-success" (click)="onNewEventType()">
+      New Event Type
+    </button>
+  </div>
+</div>
+<hr />
+<div class="row">
+  <div class="col-xs-12">
+    <app-event-type-item
+      *ngFor="let eventTypeElement of eventTypes; let i = index"
+      [eventType]="eventTypeElement"
+      [index]="i"
+    ></app-event-type-item>
+  </div>
+</div>

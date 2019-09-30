@@ -30,5 +30,13 @@ export const eventsUrl = {
 const EVENT_TYPES_PATH = `${environment.apiUrl}/eventTypes`;
 export const eventTypesUrl = {
   GET_ALL: EVENT_TYPES_PATH,
-  POST: EVENT_TYPES_PATH
+  POST: EVENT_TYPES_PATH,
+  PUT: EVENT_TYPES_PATH
+};
+
+const ALERT_TYPES_PATH = `${environment.apiUrl}/alertTypes`;
+export const alertTypesUrl = {
+  GET_ALL: ALERT_TYPES_PATH,
+  POST: ALERT_TYPES_PATH,
+  PUT: ALERT_TYPES_PATH
 };

@@ -15,6 +15,7 @@ import { ClientEffects } from "./clients/store/client.effects";
 import { FieldEffects } from "./fields/store/field.effects";
 import { EventEffects } from "./events/store/event.effects";
 import { EventTypeEffects } from "./event-types/store/event-type.effects";
+import { AlertTypeEffects } from "./alert-types/store/alert-type.effects";
 import { SharedModule } from "./shared/shared.module";
 import * as fromApp from "./store/app.reducer";
 
@@ -31,7 +32,8 @@ import * as fromApp from "./store/app.reducer";
       ClientEffects,
       FieldEffects,
       EventEffects,
-      EventTypeEffects
+      EventTypeEffects,
+      AlertTypeEffects
     ]),
     StoreRouterConnectingModule.forRoot(),
     SharedModule

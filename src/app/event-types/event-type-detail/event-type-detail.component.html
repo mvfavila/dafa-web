@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>{{ eventType.name }}</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div appDropdown class="btn-group">
+      <button class="btn btn-primary dropdown-toggle">
+        Manage Event Type <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a routerLink="edit" style="cursor: pointer">Edit Event Type</a>
+        </li>
+        <li>
+          <a style="cursor: pointer" (click)="onDelete()">Delete Event Type</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    {{ eventType.name }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let event of eventType.events">
+        {{ event.date }} ({{ event.active }})
+      </li>
+    </ul>
+  </div>
+</div>

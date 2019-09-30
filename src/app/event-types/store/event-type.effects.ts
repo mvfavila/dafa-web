@@ -3,7 +3,8 @@ import { Injectable } from "@angular/core";
 import { Actions, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { createEffect } from "@ngrx/effects";
-import { switchMap, map, withLatestFrom } from "rxjs/operators";
+import { switchMap, map, withLatestFrom, catchError } from "rxjs/operators";
+import { of } from "rxjs";
 
 import * as fromApp from "../../store/app.reducer";
 import * as EventTypeActions from "./event-type.actions";
@@ -31,6 +32,63 @@ export class EventTypeEffects {
       }),
       map(eventTypes => EventTypeActions.setEventTypes({ eventTypes }))
     )
+  );
+
+  createEventType$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(EventTypeActions.addEventType),
+        switchMap(action => {
+          return this.http
+            .post(eventTypesUrl.POST, { eventType: action.eventType })
+            .pipe(
+              map(_ =>
+                EventTypeActions.addEventType({ eventType: action.eventType })
+              ),
+              catchError((err: Error) =>
+                of(
+                  EventTypeActions.addEventTypeFailure({
+                    eventType: action.eventType,
+                    errorMessage: `EventType creation failed`,
+                    originalError: err
+                  })
+                )
+              )
+            );
+        })
+      );
+    },
+    { dispatch: false }
+  );
+
+  updateEventType$ = createEffect(
+    () => {
+      return this.actions$.pipe(
+        ofType(EventTypeActions.updateEventType),
+        switchMap(action => {
+          return this.http
+            .put(eventTypesUrl.PUT, { eventType: action.eventType })
+            .pipe(
+              map(_ =>
+                EventTypeActions.updateEventType({
+                  index: action.index,
+                  eventType: action.eventType
+                })
+              ),
+              catchError((err: Error) =>
+                of(
+                  EventTypeActions.updateEventTypeFailure({
+                    eventType: action.eventType,
+                    errorMessage: `EventType update failed`,
+                    originalError: err
+                  })
+                )
+              )
+            );
+        })
+      );
+    },
+    { dispatch: false }
   );
 
   storeEventTypes$ = createEffect(
