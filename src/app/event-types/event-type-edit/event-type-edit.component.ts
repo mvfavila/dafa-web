@@ -124,14 +124,14 @@ export class EventTypeEditComponent implements OnInit, DoCheck, OnDestroy {
   private getAlertTypeForm(alertType: AlertType): FormGroup {
     return new FormGroup({
       _id: new FormControl(alertType._id),
-      name: new FormControl(alertType.name, [
+      name: new FormControl({ value: alertType.name, disabled: true }, [
         Validators.required,
         Validators.pattern(regexMask.TEXT)
       ]),
-      numberOfDaysToWarning: new FormControl(alertType.numberOfDaysToWarning, [
-        Validators.required,
-        Validators.pattern(regexMask.INTEGER)
-      ])
+      numberOfDaysToWarning: new FormControl(
+        { value: alertType.numberOfDaysToWarning, disabled: true },
+        [Validators.required, Validators.pattern(regexMask.INTEGER)]
+      )
     });
   }
 
