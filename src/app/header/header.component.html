@@ -28,6 +28,9 @@
         <li routerLinkDirective="active" *ngIf="isAuthenticated">
           <a routerLink="/eventTypes">Event Types</a>
         </li>
+        <li routerLinkDirective="active" *ngIf="isAuthenticated">
+          <a routerLink="/alertTypes">Alert Types</a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li *ngIf="isAuthenticated">

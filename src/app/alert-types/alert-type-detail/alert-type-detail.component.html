@@ -1,0 +1,36 @@
+<div class="row">
+  <div class="col-xs-12">
+    <h1>{{ alertType.name }}</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <div appDropdown class="btn-group">
+      <button class="btn btn-primary dropdown-toggle">
+        Manage Alert Type <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a routerLink="edit" style="cursor: pointer">Edit Alert Type</a>
+        </li>
+        <li>
+          <a style="cursor: pointer" (click)="onDelete()">Delete Alert Type</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    {{ alertType.name }}
+  </div>
+</div>
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let event of alertType.events">
+        {{ event.date }} ({{ event.active }})
+      </li>
+    </ul>
+  </div>
+</div>

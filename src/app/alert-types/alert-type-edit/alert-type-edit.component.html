@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form [formGroup]="alertTypeForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-xs-12">
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="!alertTypeForm.valid"
+          >
+            Save
+          </button>
+          <button type="button" class="btn btn-danger" (click)="onCancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+      <!-- name -->
+      <div class="row">
+        <div class="col-xs-8">
+          <div class="form-group">
+            <label for="name">Name</label
+            ><input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <!-- numberOfDaysToWarning -->
+        <div class="col-xs-4">
+          <div class="form-group">
+            <label for="numberOfDaysToWarning">Number of days to warning</label
+            ><input
+              type="text"
+              id="numberOfDaysToWarning"
+              formControlName="numberOfDaysToWarning"
+              class="form-control"
+            />
+          </div>
+        </div>
+      </div>
+      <!-- active -->
+      <div class="row" *ngIf="isEditMode">
+        <div class="col-xs-12">
+          <div class="form-group">
+            <label for="active">Active</label>
+            <label class="switch">
+              <input
+                type="checkbox"
+                id="active"
+                formControlName="active"
+                class="form-control"
+              />
+              <span class="slider round"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

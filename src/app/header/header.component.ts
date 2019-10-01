@@ -36,14 +36,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
   }
 
-  onSaveData() {
-    // this.store.dispatch(ModelActions.storeModels());
-  }
-
-  onFetchData() {
-    this.store.dispatch(ClientActions.fetchClients());
-  }
-
   onLogout() {
     this.store.dispatch(AuthActions.logout());
   }
