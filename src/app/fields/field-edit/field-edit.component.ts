@@ -12,7 +12,7 @@ import { EventType } from "src/app/shared/models/eventType.model";
 import { regexMask } from "src/app/shared/regex";
 import { states } from "../../shared/states";
 import { Guid } from "src/app/shared/guid";
-import { messages } from "../../shared/validation";
+import { messages, TEXT_FIELD_MIN_LENGTH } from "../../shared/validation";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../../clients/store/client.actions";
 import * as FieldActions from "../../fields/store/field.actions";
@@ -27,7 +27,6 @@ const SELECT_FIELDS_INITIAL_INDEX = -1;
   styleUrls: ["./field-edit.component.css"]
 })
 export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
-  idSubscription: Subscription;
   index: number;
   isEditMode = false;
   field: Field;
@@ -36,10 +35,11 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
   clientIndex: number;
   events: Event[] = [];
   eventTypes: EventType[] = [];
-  states = states;
   stateIndex: number;
+  states = states;
   messages = messages;
 
+  private idSubscription: Subscription;
   private fieldStoreSub: Subscription;
   private clientStoreSub: Subscription;
   private eventTypeStoreSub: Subscription;
@@ -216,37 +216,34 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   private instantiateFieldForm() {
-    this.fieldForm = new FormGroup(
-      {
-        name: new FormControl(this.field.name, [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.pattern(regexMask.TEXT)
-        ]),
-        description: new FormControl(this.field.description),
-        email: new FormControl(this.field.email, Validators.email),
-        address: new FormControl(
-          this.field.address,
-          Validators.pattern(regexMask.TEXT)
-        ),
-        city: new FormControl(
-          this.field.city,
-          Validators.pattern(regexMask.TEXT)
-        ),
-        stateIndex: new FormControl(this.stateIndex),
-        postalCode: new FormControl(
-          this.field.postalCode,
-          Validators.pattern(regexMask.POSTAL_CODE)
-        ),
-        events: new FormArray([]),
-        clientIndex: new FormControl(
-          this.clientIndex,
-          Validators.pattern(regexMask.INTEGER)
-        ),
-        active: new FormControl(this.field.active, Validators.required)
-      },
-      { updateOn: "blur" }
-    );
+    this.fieldForm = new FormGroup({
+      name: new FormControl(this.field.name, [
+        Validators.required,
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
+        Validators.pattern(regexMask.TEXT)
+      ]),
+      description: new FormControl(this.field.description),
+      email: new FormControl(this.field.email, Validators.email),
+      address: new FormControl(this.field.address, [
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
+        Validators.pattern(regexMask.TEXT)
+      ]),
+      city: new FormControl(this.field.city, [
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
+        Validators.pattern(regexMask.TEXT)
+      ]),
+      stateIndex: new FormControl(this.stateIndex),
+      postalCode: new FormControl(
+        this.field.postalCode,
+        Validators.pattern(regexMask.POSTAL_CODE)
+      ),
+      events: new FormArray([]),
+      clientIndex: new FormControl(
+        this.clientIndex,
+        Validators.pattern(regexMask.INTEGER)
+      ),
+      active: new FormControl(this.field.active)
+    });
     this.createEventsControls();
   }
 
@@ -256,6 +253,14 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
 
   get email() {
     return this.fieldForm.get("email");
+  }
+
+  get address() {
+    return this.fieldForm.get("address");
+  }
+
+  get city() {
+    return this.fieldForm.get("city");
   }
 
   get postalCode() {

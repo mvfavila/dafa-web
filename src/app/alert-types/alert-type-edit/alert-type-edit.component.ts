@@ -7,7 +7,7 @@ import { map } from "rxjs/operators";
 
 import { AlertType } from "src/app/shared/models/alertType.model";
 import { regexMask } from "src/app/shared/regex";
-import { messages } from "../../shared/validation";
+import { messages, TEXT_FIELD_MIN_LENGTH } from "../../shared/validation";
 import * as fromApp from "src/app/store/app.reducer";
 import * as AlertTypeActions from "../../alert-types/store/alert-type.actions";
 
@@ -107,6 +107,7 @@ export class AlertTypeEditComponent implements OnInit, OnDestroy {
     this.alertTypeForm = new FormGroup({
       name: new FormControl(this.alertType.name, [
         Validators.required,
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
         Validators.pattern(regexMask.TEXT)
       ]),
       numberOfDaysToWarning: new FormControl(

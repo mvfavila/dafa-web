@@ -35,7 +35,10 @@
                 {{ messages.required("Name") }}
               </div>
               <div *ngIf="name.hasError('minlength')">
-                {{ messages.minLength("Name", 3) }}
+                {{ messages.minLength("Name") }}
+              </div>
+              <div *ngIf="name.hasError('pattern')">
+                {{ messages.pattern("Name") }}
               </div>
             </div>
           </div>
@@ -113,6 +116,17 @@
               formControlName="address"
               class="form-control"
             />
+            <div
+              *ngIf="address.invalid && (address.dirty || address.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="address.hasError('minlength')">
+                {{ messages.minLength("Address") }}
+              </div>
+              <div *ngIf="address.hasError('pattern')">
+                {{ messages.pattern("Address") }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -164,6 +178,17 @@
               formControlName="city"
               class="form-control"
             />
+            <div
+              *ngIf="city.invalid && (city.dirty || city.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="city.hasError('minlength')">
+                {{ messages.minLength("City") }}
+              </div>
+              <div *ngIf="city.hasError('pattern')">
+                {{ messages.pattern("City") }}
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -33,8 +33,14 @@
               "
               class="alert alert-danger"
             >
+              <div *ngIf="firstName.hasError('minlength')">
+                {{ messages.minLength("First Name") }}
+              </div>
               <div *ngIf="firstName.hasError('required')">
                 {{ messages.required("First Name") }}
+              </div>
+              <div *ngIf="firstName.hasError('pattern')">
+                {{ messages.pattern("First Name") }}
               </div>
             </div>
           </div>
@@ -53,8 +59,14 @@
               *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
               class="alert alert-danger"
             >
+              <div *ngIf="lastName.hasError('minlength')">
+                {{ messages.minLength("Last Name") }}
+              </div>
               <div *ngIf="lastName.hasError('required')">
                 {{ messages.required("Last Name") }}
+              </div>
+              <div *ngIf="lastName.hasError('pattern')">
+                {{ messages.pattern("Last Name") }}
               </div>
             </div>
           </div>
@@ -95,6 +107,17 @@
               formControlName="company"
               class="form-control"
             />
+            <div
+              *ngIf="company.invalid && (company.dirty || company.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="company.hasError('minlength')">
+                {{ messages.minLength("Company") }}
+              </div>
+              <div *ngIf="company.hasError('pattern')">
+                {{ messages.pattern("Company") }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -109,6 +132,17 @@
               formControlName="address"
               class="form-control"
             />
+            <div
+              *ngIf="address.invalid && (address.dirty || address.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="address.hasError('minlength')">
+                {{ messages.minLength("Address") }}
+              </div>
+              <div *ngIf="address.hasError('pattern')">
+                {{ messages.pattern("Address") }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -160,6 +194,17 @@
               formControlName="city"
               class="form-control"
             />
+            <div
+              *ngIf="city.invalid && (city.dirty || city.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="city.hasError('minlength')">
+                {{ messages.minLength("City") }}
+              </div>
+              <div *ngIf="city.hasError('pattern')">
+                {{ messages.pattern("City") }}
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -30,6 +30,9 @@
               *ngIf="name.invalid && (name.dirty || name.touched)"
               class="alert alert-danger"
             >
+              <div *ngIf="name.hasError('minlength')">
+                {{ messages.minLength("Name") }}
+              </div>
               <div *ngIf="name.hasError('required')">
                 {{ messages.required("Name") }}
               </div>
@@ -55,6 +58,9 @@
               "
               class="alert alert-danger"
             >
+              <div *ngIf="description.hasError('minlength')">
+                {{ messages.minLength("Description") }}
+              </div>
               <div *ngIf="description.hasError('required')">
                 {{ messages.required("Description") }}
               </div>

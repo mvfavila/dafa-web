@@ -1,3 +1,5 @@
+export const TEXT_FIELD_MIN_LENGTH = 3;
+
 export const messages = {
   required: (fieldName: string) => {
     return `${fieldName} is required`;
@@ -11,7 +13,7 @@ export const messages = {
     return `${fieldName} must be a number`;
   },
 
-  minLength: (fieldName: string, minLengthInclusive: number) => {
-    return `${fieldName} must be at least ${minLengthInclusive} characters long.`;
+  minLength: (fieldName: string) => {
+    return `${fieldName} must be at least ${TEXT_FIELD_MIN_LENGTH} characters long.`;
   }
 };

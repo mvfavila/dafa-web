@@ -8,7 +8,7 @@ import { map } from "rxjs/operators";
 import { Client } from "../../shared/models/client.model";
 import { regexMask } from "../../shared/regex";
 import { states, CountryStatesCollection } from "../../shared/states";
-import { messages } from "../../shared/validation";
+import { messages, TEXT_FIELD_MIN_LENGTH } from "../../shared/validation";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../store/client.actions";
 
@@ -119,24 +119,26 @@ export class ClientEditComponent implements OnInit, OnDestroy {
     this.clientForm = new FormGroup({
       firstName: new FormControl(this.client.firstName, [
         Validators.required,
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
         Validators.pattern(regexMask.TEXT)
       ]),
       lastName: new FormControl(this.client.lastName, [
         Validators.required,
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
         Validators.pattern(regexMask.TEXT)
       ]),
-      company: new FormControl(
-        this.client.company,
+      company: new FormControl(this.client.company, [
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
         Validators.pattern(regexMask.TEXT)
-      ),
-      address: new FormControl(
-        this.client.address,
+      ]),
+      address: new FormControl(this.client.address, [
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
         Validators.pattern(regexMask.TEXT)
-      ),
-      city: new FormControl(
-        this.client.city,
+      ]),
+      city: new FormControl(this.client.city, [
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
         Validators.pattern(regexMask.TEXT)
-      ),
+      ]),
       stateIndex: new FormControl(this.stateIndex),
       postalCode: new FormControl(
         this.client.postalCode,
@@ -156,6 +158,18 @@ export class ClientEditComponent implements OnInit, OnDestroy {
 
   get lastName() {
     return this.clientForm.get("lastName");
+  }
+
+  get company() {
+    return this.clientForm.get("company");
+  }
+
+  get address() {
+    return this.clientForm.get("address");
+  }
+
+  get city() {
+    return this.clientForm.get("city");
   }
 
   get postalCode() {

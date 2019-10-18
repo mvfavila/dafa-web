@@ -8,7 +8,7 @@ import { map, tap } from "rxjs/operators";
 import { AlertType } from "src/app/shared/models/alertType.model";
 import { EventType } from "src/app/shared/models/eventType.model";
 import { regexMask } from "src/app/shared/regex";
-import { messages } from "../../shared/validation";
+import { messages, TEXT_FIELD_MIN_LENGTH } from "../../shared/validation";
 import * as fromApp from "src/app/store/app.reducer";
 import * as EventTypeActions from "../../event-types/store/event-type.actions";
 import * as AlertTypeActions from "../../alert-types/store/alert-type.actions";
@@ -168,15 +168,17 @@ export class EventTypeEditComponent implements OnInit, DoCheck, OnDestroy {
     this.eventTypeForm = new FormGroup({
       name: new FormControl(this.eventType.name, [
         Validators.required,
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
         Validators.pattern(regexMask.TEXT)
       ]),
       description: new FormControl(this.eventType.description, [
         Validators.required,
+        Validators.minLength(TEXT_FIELD_MIN_LENGTH),
         Validators.pattern(regexMask.TEXT)
       ]),
       alertTypes: new FormArray([], Validators.required),
       selectedAlertType: new FormControl(SELECT_ALERT_TYPE_INITIAL_INDEX),
-      active: new FormControl(this.eventType.active, Validators.required)
+      active: new FormControl(this.eventType.active)
     });
   }
 
