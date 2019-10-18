@@ -6,7 +6,7 @@ import {
 } from "@angular/router";
 import { Store } from "@ngrx/store";
 import { Actions, ofType } from "@ngrx/effects";
-import { take, map, switchMap, tap } from "rxjs/operators";
+import { take, map, switchMap } from "rxjs/operators";
 import { of } from "rxjs";
 
 import { Client } from "../shared/models/client.model";

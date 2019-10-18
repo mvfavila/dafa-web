@@ -3,13 +3,64 @@ import { Injectable } from "@angular/core";
 import { Actions, ofType } from "@ngrx/effects";
 import { Store } from "@ngrx/store";
 import { createEffect } from "@ngrx/effects";
-import { switchMap, map, withLatestFrom, catchError } from "rxjs/operators";
+import { switchMap, map, catchError } from "rxjs/operators";
 import { of } from "rxjs";
 
 import * as fromApp from "../../store/app.reducer";
 import * as ClientActions from "./client.actions";
 import { Client } from "../../shared/models/client.model";
 import { clientsUrl } from "../../shared/path";
+
+function treatMessage(responseErrorMessage: string, originalMessage: string) {
+  switch (responseErrorMessage) {
+    case "FIRST_NAME_NOT_FOUND":
+      originalMessage = "First Name is required.";
+      break;
+    case "LAST_NAME_NOT_FOUND":
+      originalMessage = "Last Name is required.";
+      break;
+    case "EMAIL_NOT_FOUND":
+      originalMessage = "E-mail is required.";
+      break;
+  }
+  return originalMessage;
+}
+
+const handleCreateClientError = (errorRes, client: Client) => {
+  let errorMessage = "Client creation failed";
+
+  if (!errorRes.error || !errorRes.error.error) {
+    return of(ClientActions.addClientFailure({ client, errorMessage }));
+  }
+
+  errorMessage = treatMessage(errorRes.error.error.message, errorMessage);
+
+  return of(
+    ClientActions.addClientFailure({
+      client,
+      errorMessage,
+      originalError: errorRes.error.error
+    })
+  );
+};
+
+const handleUpdateClientError = (errorRes, client: Client) => {
+  let errorMessage = "Client update failed";
+
+  if (!errorRes.error || !errorRes.error.error) {
+    return of(ClientActions.updateClientFailure({ client, errorMessage }));
+  }
+
+  errorMessage = treatMessage(errorRes.error.error.message, errorMessage);
+
+  return of(
+    ClientActions.updateClientFailure({
+      client,
+      errorMessage,
+      originalError: errorRes.error.error
+    })
+  );
+};
 
 @Injectable()
 export class ClientEffects {
@@ -29,7 +80,15 @@ export class ClientEffects {
         });
         return result;
       }),
-      map(clients => ClientActions.setClients({ clients }))
+      map(clients => ClientActions.setClients({ clients })),
+      catchError((err: Error) =>
+        of(
+          ClientActions.fetchClientsFailure({
+            errorMessage: `Clients fetch failed`,
+            originalError: err
+          })
+        )
+      )
     )
   );
 
@@ -43,13 +102,7 @@ export class ClientEffects {
             .pipe(
               map(_ => ClientActions.addClient({ client: action.client })),
               catchError((err: Error) =>
-                of(
-                  ClientActions.addClientFailure({
-                    client: action.client,
-                    errorMessage: `Client creation failed`,
-                    originalError: err
-                  })
-                )
+                handleCreateClientError(err, action.client)
               )
             );
         })
@@ -71,28 +124,9 @@ export class ClientEffects {
               })
             ),
             catchError((err: Error) =>
-              of(
-                ClientActions.updateClientFailure({
-                  client: action.client,
-                  errorMessage: `Client update failed`,
-                  originalError: err
-                })
-              )
+              handleUpdateClientError(err, action.client)
             )
           );
-        })
-      );
-    },
-    { dispatch: false }
-  );
-
-  storeClients$ = createEffect(
-    () => {
-      return this.actions$.pipe(
-        ofType(ClientActions.storeClients),
-        withLatestFrom(this.store.select("client")),
-        switchMap(([_, clientsState]) => {
-          return this.http.put(clientsUrl.POST, clientsState.clients);
         })
       );
     },

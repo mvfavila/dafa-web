@@ -33,4 +33,7 @@ export const setClients = createAction(
 
 export const fetchClients = createAction("[Client] Fetch Clients");
 
-export const storeClients = createAction("[Client] Store Clients");
+export const fetchClientsFailure = createAction(
+  "[Client] Fetch Clients - Failure",
+  props<{ errorMessage: string; originalError?: Error }>()
+);
