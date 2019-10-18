@@ -115,10 +115,19 @@ export class AlertTypeEditComponent implements OnInit, OnDestroy {
         Validators.pattern(regexMask.TEXT)
       ]),
       numberOfDaysToWarning: new FormControl(
-        this.alertType.numberOfDaysToWarning
+        this.alertType.numberOfDaysToWarning,
+        [Validators.required, Validators.pattern(regexMask.INTEGER)]
       ),
       active: new FormControl(this.alertType.active, Validators.required)
     });
+  }
+
+  get name() {
+    return this.alertTypeForm.get("name");
+  }
+
+  get numberOfDaysToWarning() {
+    return this.alertTypeForm.get("numberOfDaysToWarning");
   }
 
   private initEditFormAttributes() {

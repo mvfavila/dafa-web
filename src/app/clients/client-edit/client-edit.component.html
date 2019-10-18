@@ -20,25 +20,43 @@
         <!-- firstName -->
         <div class="col-xs-6">
           <div class="form-group">
-            <label for="firstName">Name</label
+            <label for="firstName" class="required">First Name</label
             ><input
               type="text"
               id="firstName"
               formControlName="firstName"
               class="form-control"
             />
+            <div
+              *ngIf="
+                firstName.invalid && (firstName.dirty || firstName.touched)
+              "
+              class="alert alert-danger"
+            >
+              <div *ngIf="firstName.hasError('required')">
+                First Name is required.
+              </div>
+            </div>
           </div>
         </div>
         <!-- lastName -->
         <div class="col-xs-6">
           <div class="form-group">
-            <label for="lastName">Surname</label
+            <label for="lastName" class="required">Last Name</label
             ><input
               type="text"
               id="lastName"
               formControlName="lastName"
-              class="form-control"
+              class="form-control required"
             />
+            <div
+              *ngIf="lastName.invalid && (lastName.dirty || lastName.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="lastName.hasError('required')">
+                Last Name is required.
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -47,13 +65,24 @@
         <!-- email -->
         <div class="col-xs-6">
           <div class="form-group">
-            <label for="email">E-mail</label
+            <label for="email" class="required">E-mail</label
             ><input
               type="text"
               id="email"
               formControlName="email"
               class="form-control"
             />
+            <div
+              *ngIf="email.invalid && (email.dirty || email.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="email.hasError('required')">
+                E-mail is required.
+              </div>
+              <div *ngIf="email.hasError('email')">
+                E-mail must be valid.
+              </div>
+            </div>
           </div>
         </div>
         <!-- company -->
@@ -95,6 +124,16 @@
               formControlName="postalCode"
               class="form-control"
             />
+            <div
+              *ngIf="
+                postalCode.invalid && (postalCode.dirty || postalCode.touched)
+              "
+              class="alert alert-danger"
+            >
+              <div *ngIf="postalCode.hasError('pattern')">
+                Postal Code must be valid.
+              </div>
+            </div>
           </div>
         </div>
         <!-- state -->

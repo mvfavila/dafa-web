@@ -71,3 +71,16 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty {
+  border: 1px solid red;
+}
+
+input.ng-pending.ng-dirty {
+  border: 1px solid yellow;
+}
+
+label.required:after {
+  content: "*";
+}

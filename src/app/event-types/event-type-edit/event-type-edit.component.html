@@ -19,13 +19,21 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
-            <label for="name">Name</label
+            <label for="name" class="required">Name</label
             ><input
               type="text"
               id="name"
               formControlName="name"
               class="form-control"
             />
+            <div
+              *ngIf="name.invalid && (name.dirty || name.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="name.hasError('required')">
+                Name is required.
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -33,13 +41,24 @@
       <div class="row">
         <div class="col-xs-12">
           <div class="form-group">
-            <label for="description">Description</label
+            <label for="description" class="required">Description</label
             ><input
               type="text"
               id="description"
               formControlName="description"
               class="form-control"
             />
+            <div
+              *ngIf="
+                description.invalid &&
+                (description.dirty || description.touched)
+              "
+              class="alert alert-danger"
+            >
+              <div *ngIf="description.hasError('required')">
+                Description is required.
+              </div>
+            </div>
           </div>
         </div>
       </div>

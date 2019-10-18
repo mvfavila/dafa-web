@@ -136,20 +136,33 @@ export class ClientEditComponent implements OnInit, OnDestroy {
         this.client.city,
         Validators.pattern(regexMask.TEXT)
       ),
-      stateIndex: new FormControl(
-        this.stateIndex,
-        Validators.pattern(regexMask.TEXT)
-      ),
+      stateIndex: new FormControl(this.stateIndex),
       postalCode: new FormControl(
         this.client.postalCode,
         Validators.pattern(regexMask.POSTAL_CODE)
       ),
       email: new FormControl(this.client.email, [
         Validators.required,
-        Validators.pattern(regexMask.EMAIL)
+        Validators.email
       ]),
       active: new FormControl(this.client.active, Validators.required)
     });
+  }
+
+  get firstName() {
+    return this.clientForm.get("firstName");
+  }
+
+  get lastName() {
+    return this.clientForm.get("lastName");
+  }
+
+  get postalCode() {
+    return this.clientForm.get("postalCode");
+  }
+
+  get email() {
+    return this.clientForm.get("email");
   }
 
   private initEditFormAttributes() {

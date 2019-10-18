@@ -170,28 +170,30 @@ export class EventTypeEditComponent implements OnInit, DoCheck, OnDestroy {
 
   private initEventTypeForm() {
     this.eventTypeForm = new FormGroup({
-      name: new FormControl("", [
-        Validators.required,
-        Validators.pattern(regexMask.TEXT)
-      ]),
-      description: new FormControl(""),
-      alertTypes: new FormArray([]),
-      selectedAlertType: new FormControl(SELECT_ALERT_TYPE_INITIAL_INDEX),
-      active: new FormControl(true, Validators.required)
-    });
-  }
-
-  private instantiateEventTypeForm() {
-    this.eventTypeForm = new FormGroup({
       name: new FormControl(this.eventType.name, [
         Validators.required,
         Validators.pattern(regexMask.TEXT)
       ]),
-      description: new FormControl(this.eventType.description),
-      alertTypes: new FormArray([]),
+      description: new FormControl(this.eventType.description, [
+        Validators.required,
+        Validators.pattern(regexMask.TEXT)
+      ]),
+      alertTypes: new FormArray([], Validators.required),
       selectedAlertType: new FormControl(SELECT_ALERT_TYPE_INITIAL_INDEX),
       active: new FormControl(this.eventType.active, Validators.required)
     });
+  }
+
+  get name() {
+    return this.eventTypeForm.get("name");
+  }
+
+  get description() {
+    return this.eventTypeForm.get("description");
+  }
+
+  private instantiateEventTypeForm() {
+    this.initEventTypeForm();
     this.createAlertTypesControls();
   }
 

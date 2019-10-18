@@ -19,25 +19,47 @@
       <div class="row">
         <div class="col-xs-8">
           <div class="form-group">
-            <label for="name">Name</label
+            <label for="name" class="required">Name</label
             ><input
               type="text"
               id="name"
               formControlName="name"
               class="form-control"
             />
+            <div
+              *ngIf="name.invalid && (name.dirty || name.touched)"
+              class="alert alert-danger"
+            >
+              <div *ngIf="name.hasError('required')">
+                Name is required.
+              </div>
+            </div>
           </div>
         </div>
         <!-- numberOfDaysToWarning -->
         <div class="col-xs-4">
           <div class="form-group">
-            <label for="numberOfDaysToWarning">Number of days to warning</label
+            <label for="numberOfDaysToWarning" class="required">Qt. dias</label
             ><input
               type="text"
               id="numberOfDaysToWarning"
               formControlName="numberOfDaysToWarning"
               class="form-control"
             />
+            <div
+              *ngIf="
+                numberOfDaysToWarning.invalid &&
+                (numberOfDaysToWarning.dirty || numberOfDaysToWarning.touched)
+              "
+              class="alert alert-danger"
+            >
+              <div *ngIf="numberOfDaysToWarning.hasError('required')">
+                Days quantity is required.
+              </div>
+              <div *ngIf="numberOfDaysToWarning.hasError('pattern')">
+                Days quantity must be a number.
+              </div>
+            </div>
           </div>
         </div>
       </div>

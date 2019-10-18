@@ -192,13 +192,6 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
     }
   }
 
-  private getEventType(eventTypeId: string): EventType {
-    const eventType = this.eventTypes.find(et => {
-      return et._id === eventTypeId;
-    });
-    return eventType;
-  }
-
   private getEventTypeByIndex(index: number | string): EventType {
     const eventType = this.eventTypes[+index];
     return eventType;
@@ -221,34 +214,54 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
   }
 
   private instantiateFieldForm() {
-    this.fieldForm = new FormGroup({
-      name: new FormControl(this.field.name, [
-        Validators.required,
-        Validators.pattern(regexMask.TEXT)
-      ]),
-      description: new FormControl(this.field.description),
-      email: new FormControl(
-        this.field.email,
-        Validators.pattern(regexMask.EMAIL)
-      ),
-      address: new FormControl(
-        this.field.address,
-        Validators.pattern(regexMask.TEXT)
-      ),
-      city: new FormControl(
-        this.field.city,
-        Validators.pattern(regexMask.TEXT)
-      ),
-      stateIndex: new FormControl(this.stateIndex),
-      postalCode: new FormControl(
-        this.field.postalCode,
-        Validators.pattern(regexMask.POSTAL_CODE)
-      ),
-      events: new FormArray([]),
-      clientIndex: new FormControl(this.clientIndex, Validators.required),
-      active: new FormControl(this.field.active, Validators.required)
-    });
+    this.fieldForm = new FormGroup(
+      {
+        name: new FormControl(this.field.name, [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(regexMask.TEXT)
+        ]),
+        description: new FormControl(this.field.description),
+        email: new FormControl(this.field.email, Validators.email),
+        address: new FormControl(
+          this.field.address,
+          Validators.pattern(regexMask.TEXT)
+        ),
+        city: new FormControl(
+          this.field.city,
+          Validators.pattern(regexMask.TEXT)
+        ),
+        stateIndex: new FormControl(this.stateIndex),
+        postalCode: new FormControl(
+          this.field.postalCode,
+          Validators.pattern(regexMask.POSTAL_CODE)
+        ),
+        events: new FormArray([]),
+        clientIndex: new FormControl(
+          this.clientIndex,
+          Validators.pattern(regexMask.INTEGER)
+        ),
+        active: new FormControl(this.field.active, Validators.required)
+      },
+      { updateOn: "blur" }
+    );
     this.createEventsControls();
+  }
+
+  get name() {
+    return this.fieldForm.get("name");
+  }
+
+  get email() {
+    return this.fieldForm.get("email");
+  }
+
+  get postalCode() {
+    return this.fieldForm.get("postalCode");
+  }
+
+  get selectedClient() {
+    return this.fieldForm.get("clientIndex");
   }
 
   private createEventsControls() {
