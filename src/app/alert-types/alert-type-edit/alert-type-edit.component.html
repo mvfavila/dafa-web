@@ -31,7 +31,7 @@
               class="alert alert-danger"
             >
               <div *ngIf="name.hasError('required')">
-                Name is required.
+                {{ messages.required("Name") }}
               </div>
             </div>
           </div>
@@ -54,10 +54,10 @@
               class="alert alert-danger"
             >
               <div *ngIf="numberOfDaysToWarning.hasError('required')">
-                Days quantity is required.
+                {{ messages.required("Days quantity") }}
               </div>
               <div *ngIf="numberOfDaysToWarning.hasError('pattern')">
-                Days quantity must be a number.
+                {{ messages.mustBeNumber("Days quantity") }}
               </div>
             </div>
           </div>

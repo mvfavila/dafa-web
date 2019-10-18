@@ -32,10 +32,10 @@
               class="alert alert-danger"
             >
               <div *ngIf="name.hasError('required')">
-                Name is required.
+                {{ messages.required("Name") }}
               </div>
               <div *ngIf="name.hasError('minlength')">
-                Name must be at least 3 characters long.
+                {{ messages.minLength("Name", 3) }}
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@
               class="alert alert-danger"
             >
               <div *ngIf="email.hasError('email')">
-                E-mail must be valid.
+                {{ messages.pattern("E-mail") }}
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@
               class="alert alert-danger"
             >
               <div *ngIf="selectedClient.hasError('pattern')">
-                Client is required.
+                {{ messages.required("Client") }}
               </div>
             </div>
           </div>
@@ -135,7 +135,7 @@
               class="alert alert-danger"
             >
               <div *ngIf="postalCode.hasError('pattern')">
-                Postal Code must be valid.
+                {{ messages.pattern("Postal Code") }}
               </div>
             </div>
           </div>

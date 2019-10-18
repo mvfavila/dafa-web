@@ -1,19 +1,14 @@
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  OnChanges,
-  DoCheck
-} from "@angular/core";
+import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
 import { FormGroup, FormControl, FormArray, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
-import { Subscription, Observable } from "rxjs";
+import { Subscription } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 import { AlertType } from "src/app/shared/models/alertType.model";
 import { EventType } from "src/app/shared/models/eventType.model";
 import { regexMask } from "src/app/shared/regex";
+import { messages } from "../../shared/validation";
 import * as fromApp from "src/app/store/app.reducer";
 import * as EventTypeActions from "../../event-types/store/event-type.actions";
 import * as AlertTypeActions from "../../alert-types/store/alert-type.actions";
@@ -33,6 +28,7 @@ export class EventTypeEditComponent implements OnInit, DoCheck, OnDestroy {
   eventTypeForm: FormGroup;
   eventAlertTypes: AlertType[] = [];
   existingAlertTypes: AlertType[] = [];
+  messages = messages;
 
   private eventTypeStoreSub: Subscription;
   private existingAlertTypeStoreSub: Subscription;

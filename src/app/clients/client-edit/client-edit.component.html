@@ -34,7 +34,7 @@
               class="alert alert-danger"
             >
               <div *ngIf="firstName.hasError('required')">
-                First Name is required.
+                {{ messages.required("First Name") }}
               </div>
             </div>
           </div>
@@ -54,7 +54,7 @@
               class="alert alert-danger"
             >
               <div *ngIf="lastName.hasError('required')">
-                Last Name is required.
+                {{ messages.required("Last Name") }}
               </div>
             </div>
           </div>
@@ -77,10 +77,10 @@
               class="alert alert-danger"
             >
               <div *ngIf="email.hasError('required')">
-                E-mail is required.
+                {{ messages.required("E-mail") }}
               </div>
               <div *ngIf="email.hasError('email')">
-                E-mail must be valid.
+                {{ messages.pattern("E-mail") }}
               </div>
             </div>
           </div>
@@ -131,7 +131,7 @@
               class="alert alert-danger"
             >
               <div *ngIf="postalCode.hasError('pattern')">
-                Postal Code must be valid.
+                {{ messages.pattern("Postal Code") }}
               </div>
             </div>
           </div>

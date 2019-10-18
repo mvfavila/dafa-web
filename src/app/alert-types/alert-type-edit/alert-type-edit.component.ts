@@ -1,21 +1,15 @@
-import { Component, OnInit, OnDestroy, DoCheck } from "@angular/core";
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Params, Router } from "@angular/router";
-import { FormGroup, FormControl, FormArray, Validators } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { Store } from "@ngrx/store";
-import { Subscription, Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { Subscription } from "rxjs";
+import { map } from "rxjs/operators";
 
-import { Event } from "../../shared/models/event.model";
-import { Client } from "src/app/shared/models/client.model";
 import { AlertType } from "src/app/shared/models/alertType.model";
-import { EventType } from "src/app/shared/models/eventType.model";
 import { regexMask } from "src/app/shared/regex";
-import { states } from "../../shared/states";
+import { messages } from "../../shared/validation";
 import * as fromApp from "src/app/store/app.reducer";
 import * as AlertTypeActions from "../../alert-types/store/alert-type.actions";
-import * as EventActions from "../../events/store/event.actions";
-
-const SELECT_FIELDS_INITIAL_INDEX = -1;
 
 @Component({
   selector: "app-alert-type-edit",
@@ -28,6 +22,7 @@ export class AlertTypeEditComponent implements OnInit, OnDestroy {
   isEditMode = false;
   alertType: AlertType;
   alertTypeForm: FormGroup;
+  messages = messages;
 
   private alertTypeStoreSub: Subscription;
 

@@ -5,12 +5,12 @@ import { Store } from "@ngrx/store";
 import { Subscription } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { Field } from "../../shared/models/field.model";
 import { Client } from "../../shared/models/client.model";
-import * as fromApp from "src/app/store/app.reducer";
-import * as ClientActions from "../store/client.actions";
 import { regexMask } from "../../shared/regex";
 import { states, CountryStatesCollection } from "../../shared/states";
+import { messages } from "../../shared/validation";
+import * as fromApp from "src/app/store/app.reducer";
+import * as ClientActions from "../store/client.actions";
 
 const STATE_INITIAL_INDEX = -1;
 
@@ -27,6 +27,7 @@ export class ClientEditComponent implements OnInit, OnDestroy {
   clientForm: FormGroup;
   states: CountryStatesCollection;
   stateIndex: number;
+  messages = messages;
 
   private storeSub: Subscription;
 

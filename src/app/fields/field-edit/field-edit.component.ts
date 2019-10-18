@@ -12,6 +12,7 @@ import { EventType } from "src/app/shared/models/eventType.model";
 import { regexMask } from "src/app/shared/regex";
 import { states } from "../../shared/states";
 import { Guid } from "src/app/shared/guid";
+import { messages } from "../../shared/validation";
 import * as fromApp from "src/app/store/app.reducer";
 import * as ClientActions from "../../clients/store/client.actions";
 import * as FieldActions from "../../fields/store/field.actions";
@@ -37,6 +38,7 @@ export class FieldEditComponent implements OnInit, DoCheck, OnDestroy {
   eventTypes: EventType[] = [];
   states = states;
   stateIndex: number;
+  messages = messages;
 
   private fieldStoreSub: Subscription;
   private clientStoreSub: Subscription;
