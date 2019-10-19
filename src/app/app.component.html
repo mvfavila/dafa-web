@@ -1,3 +1,13 @@
+<div class="progress" style="height: 2px; margin: 0px 0px 0px 0px">
+  <div
+    *ngIf="loading"
+    class="progress-bar progress-bar-success active"
+    role="progressbar"
+    aria-valuemin="0"
+    aria-valuemax="100"
+    [style.width]="percentage + '%'"
+  ></div>
+</div>
 <app-header></app-header>
 <div class="container">
   <div class="row">
