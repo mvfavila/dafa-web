@@ -26,7 +26,7 @@ import * as fromApp from "./store/app.reducer";
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    StoreModule.forRoot(fromApp.appReducer),
+    StoreModule.forRoot(fromApp.appReducer, { runtimeChecks: null }),
     EffectsModule.forRoot([
       AuthEffects,
       ClientEffects,

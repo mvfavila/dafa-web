@@ -11,7 +11,9 @@ describe("HeaderComponent", () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [HeaderComponent],
-      imports: [StoreModule.forRoot(fromApp.appReducer)]
+      imports: [
+        StoreModule.forRoot(fromApp.appReducer, { runtimeChecks: null })
+      ]
     }).compileComponents();
   }));
 

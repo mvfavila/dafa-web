@@ -14,7 +14,7 @@ describe("AuthComponent", () => {
     TestBed.configureTestingModule({
       declarations: [AuthComponent],
       imports: [
-        StoreModule.forRoot(fromApp.appReducer),
+        StoreModule.forRoot(fromApp.appReducer, { runtimeChecks: null }),
         SharedModule,
         FormsModule
       ]
